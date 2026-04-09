@@ -28,7 +28,7 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside (desktop only)
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
@@ -39,6 +39,16 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Lock body scroll when mobile drawer is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.classList.add("drawer-open");
+    } else {
+      document.body.classList.remove("drawer-open");
+    }
+    return () => document.body.classList.remove("drawer-open");
+  }, [mobileMenuOpen]);
+
   // Logout
   const handleLogout = async () => {
     await signOut(auth);
@@ -46,11 +56,17 @@ const Navbar = () => {
     navigate("/signin");
   };
 
+  // Open drawer – also close user dropdown (if open)
+  const openDrawer = () => {
+    setUserMenuOpen(false);
+    setMobileMenuOpen(true);
+  };
+
   return (
     <>
       <nav className={`navbar-welcome ${scrolled ? "scrolled" : ""}`}>
         <div className="navbar-container-welcome">
-          {/* LOGO (matching Welcome page) */}
+          {/* LOGO */}
           <div className="brand-enhanced" onClick={() => navigate("/dashboard")}>
             <div className="logo-enhanced">
               <svg className="logo-svg" viewBox="0 0 24 24" fill="none">
@@ -82,7 +98,7 @@ const Navbar = () => {
 
           {/* RIGHT SIDE ACTIONS */}
           <div className="nav-actions-welcome">
-            {/* User Menu */}
+            {/* User Menu (Desktop only – dropdown) */}
             <div className="user-menu-welcome" ref={userMenuRef}>
               <button
                 className="user-avatar-welcome"
@@ -91,6 +107,7 @@ const Navbar = () => {
                 {auth.currentUser?.email?.charAt(0).toUpperCase() || "U"}
               </button>
 
+              {/* Desktop dropdown – hidden on mobile via CSS */}
               {userMenuOpen && (
                 <div className="user-dropdown-welcome">
                   <button onClick={() => navigate("/settings")}>⚙️ Settings</button>
@@ -100,18 +117,28 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* Mobile Toggle */}
+            {/* Mobile Toggle with animated X */}
             <button
-              className="mobile-toggle-welcome"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className={`mobile-toggle-welcome ${mobileMenuOpen ? "open" : ""}`}
+              onClick={openDrawer}
             >
-              ☰
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           </div>
         </div>
       </nav>
 
-      {/* MOBILE MENU (drawer) */}
+      {/* MOBILE DRAWER BACKDROP */}
+      {mobileMenuOpen && (
+        <div
+          className="mobile-drawer-overlay"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* MOBILE DRAWER (SIDEBAR) – includes profile links */}
       {mobileMenuOpen && (
         <div className="mobile-drawer-welcome">
           {navItems.map((item) => (
@@ -126,6 +153,23 @@ const Navbar = () => {
               {item.label}
             </button>
           ))}
+          <div className="drawer-divider"></div>
+          <button
+            onClick={() => {
+              navigate("/settings");
+              setMobileMenuOpen(false);
+            }}
+          >
+            ⚙️ Settings
+          </button>
+          <button
+            onClick={() => {
+              navigate("/reports");
+              setMobileMenuOpen(false);
+            }}
+          >
+            📑 Reports
+          </button>
           <button onClick={handleLogout}>🚪 Logout</button>
         </div>
       )}

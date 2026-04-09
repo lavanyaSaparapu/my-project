@@ -10,7 +10,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ========== NAVBAR (FULL WIDTH, LOGO AT LEFT CORNER) ========== */
+/* ========== NAVBAR ========== */
 .navbar-welcome {
   position: fixed;
   top: 0;
@@ -23,7 +23,6 @@ body {
   transition: all 0.3s ease;
 }
 
-/* Advanced: gradient border animation on scroll */
 .navbar-welcome.scrolled {
   background: rgba(5, 5, 15, 0.92);
   backdrop-filter: blur(20px) saturate(200%);
@@ -31,33 +30,25 @@ body {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-/* Container – no left padding so logo touches left edge */
 .navbar-container-welcome {
   width: 100%;
-  padding: 0.8rem 2rem 0.8rem 0;  /* left padding removed */
+  padding: 0.8rem 2rem 0.8rem 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
 }
 
-/* ----- SINGLE LOGO (now at extreme left corner) ----- */
+/* ----- LOGO ----- */
 .brand-enhanced {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   cursor: pointer;
   transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), filter 0.3s;
-  margin-left: 0;        /* ensure no margin */
-  padding-left: 1rem;    /* small breathing space from edge, but still feels corner */
-  /* if you want absolutely no space, set padding-left: 0 and add a left margin to other elements */
+  margin-left: 0;
+  padding-left: 1rem;
 }
-/* Alternative: truly corner (uncomment if you want zero space) */
-/*
-.brand-enhanced {
-  padding-left: 0;
-}
-*/
 
 .brand-enhanced:hover {
   transform: scale(1.02);
@@ -90,7 +81,7 @@ body {
   color: #cbd5e1;
 }
 
-/* ----- Navigation links (desktop) with advanced hover ----- */
+/* ----- DESKTOP NAV LINKS ----- */
 .nav-links-welcome {
   display: flex;
   gap: 0.25rem;
@@ -171,7 +162,7 @@ body {
   50% { opacity: 1; transform: translateX(-50%) scale(1.3); }
 }
 
-/* ----- Right actions (warning + profile) ----- */
+/* ----- RIGHT ACTIONS ----- */
 .nav-actions-welcome {
   position: relative;
   display: flex;
@@ -180,51 +171,12 @@ body {
   overflow: visible;
 }
 
-/* Warning indicator with glassmorphism */
-.gap-indicator-welcome {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(239, 68, 68, 0.12);
-  padding: 0.4rem 1rem;
-  border-radius: 2rem;
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  cursor: pointer;
-  transition: all 0.2s;
-  overflow: visible;
+/* User menu container (for absolute dropdown) */
+.user-menu-welcome {
   position: relative;
-  z-index: 5;
-  backdrop-filter: blur(4px);
 }
 
-.gap-indicator-welcome:hover {
-  background: rgba(239, 68, 68, 0.25);
-  transform: scale(1.02);
-  border-color: #f87171;
-  box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
-}
-
-.gap-icon {
-  font-size: 1rem;
-  animation: subtleShake 2s ease infinite;
-}
-
-@keyframes subtleShake {
-  0%, 100% { transform: rotate(0deg); }
-  2% { transform: rotate(15deg); }
-  4% { transform: rotate(-10deg); }
-  6% { transform: rotate(5deg); }
-  8% { transform: rotate(0deg); }
-}
-
-.gap-count {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #f87171;
-  text-shadow: 0 0 4px rgba(239,68,68,0.5);
-}
-
-/* Profile avatar with glow */
+/* Avatar */
 .user-avatar-welcome {
   position: relative;
   background: linear-gradient(135deg, #6366f1, #a855f7);
@@ -246,30 +198,7 @@ body {
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5), 0 0 0 6px rgba(99, 102, 241, 0.2);
 }
 
-.avatar-initials {
-  font-size: 1rem;
-  font-weight: 600;
-  color: white;
-}
-
-.avatar-status-dot {
-  position: absolute;
-  bottom: 2px;
-  right: 2px;
-  width: 10px;
-  height: 10px;
-  background: #4ade80;
-  border-radius: 50%;
-  border: 2px solid #1e1e2f;
-  animation: pulseGreen 2s infinite;
-}
-
-@keyframes pulseGreen {
-  0%, 100% { box-shadow: 0 0 0 0 #4ade80; }
-  50% { box-shadow: 0 0 0 4px rgba(74,222,128,0.4); }
-}
-
-/* Profile dropdown - overlays everything */
+/* Desktop dropdown (downward) */
 .user-dropdown-welcome {
   position: absolute;
   top: calc(100% + 10px);
@@ -284,55 +213,19 @@ body {
   animation: dropdownFade 0.2s ease;
   z-index: 99999;
   pointer-events: auto;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 @keyframes dropdownFade {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(10px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.dropdown-user-info {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding-bottom: 0.75rem;
-}
-
-.dropdown-avatar {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, #6366f1, #a855f7);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  color: white;
-}
-
-.dropdown-email {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: white;
-  margin: 0;
-}
-
-.dropdown-role {
-  font-size: 0.7rem;
-  color: #a78bfa;
-  margin: 0;
-}
-
-.dropdown-divider {
-  height: 1px;
-  background: rgba(255,255,255,0.1);
-  margin: 0.5rem 0;
 }
 
 .user-dropdown-welcome button {
@@ -357,316 +250,51 @@ body {
   transform: translateX(4px);
 }
 
-/* Mobile toggle */
+/* ========== MOBILE TOGGLE (HAMBURGER) ========== */
 .mobile-toggle-welcome {
   display: none;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 5px;
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 6px;
-  border-radius: 8px;
+  padding: 10px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  width: 48px;
+  height: 48px;
+  z-index: 1005;
+  position: relative;
 }
 
-.mobile-toggle-welcome:hover {
-  background: rgba(255,255,255,0.1);
+.mobile-toggle-welcome:hover,
+.mobile-toggle-welcome:active {
+  background: rgba(99, 102, 241, 0.2);
 }
 
 .mobile-toggle-welcome span {
+  display: block;
   width: 24px;
   height: 2px;
   background: linear-gradient(90deg, #a78bfa, #ec4899);
-  border-radius: 2px;
-  transition: 0.3s;
+  border-radius: 4px;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-@media (max-width: 1000px) {
-  .nav-links-welcome { display: none; }
-  .mobile-toggle-welcome { display: flex; }
-  .gap-indicator-welcome .gap-count { display: none; }
-  .navbar-container-welcome { padding: 0.5rem 1rem 0.5rem 0; }
+.mobile-toggle-welcome.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
 }
-/* ========== SEARCH BAR WITH ADVANCED EFFECTS ========== */
-.search-container-welcome {
-  flex: 1;
-  max-width: 420px;
-  margin: 0 1.5rem;
-  position: relative;
+.mobile-toggle-welcome.open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.mobile-toggle-welcome.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
 }
 
-.search-form-welcome {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  position: relative;
-  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-}
-
-.search-input-welcome {
-  width: 100%;
-  padding: 0.6rem 1.2rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  border-radius: 2rem 0 0 2rem;
-  color: white;
-  font-size: 0.9rem;
-  outline: none;
-  transition: all 0.3s ease;
-  letter-spacing: 0.3px;
-}
-
-/* Focus effect - glowing border */
-.search-input-welcome:focus {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #6366f1;
-  box-shadow: 0 0 12px rgba(99, 102, 241, 0.5), inset 0 0 4px rgba(99, 102, 241, 0.2);
-  transform: translateX(2px);
-}
-
-/* Hover effect */
-.search-input-welcome:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(99, 102, 241, 0.6);
-}
-
-.search-input-welcome::placeholder {
-  color: #9ca3af;
-  transition: color 0.2s;
-}
-
-.search-input-welcome:focus::placeholder {
-  color: #6366f1;
-  opacity: 0.7;
-}
-
-/* SEARCH BUTTON - with advanced effects */
-.search-button-welcome {
-  padding: 0.6rem 1.2rem;
-  background: linear-gradient(135deg, #6366f1, #a855f7);
-  border: none;
-  border-radius: 0 2rem 2rem 0;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
-}
-
-/* Glowing gradient animation on hover */
-.search-button-welcome:hover {
-  background: linear-gradient(135deg, #8183f5, #b86ef9);
-  transform: scale(1.02);
-  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-}
-
-/* Ripple effect on click */
-.search-button-welcome:active {
-  transform: scale(0.98);
-  transition: transform 0.05s;
-}
-
-/* Subtle pulse animation when focused (optional) */
-.search-button-welcome:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
-}
-
-/* Animated shimmer effect on button hover */
-.search-button-welcome::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.5s ease;
-}
-
-.search-button-welcome:hover::before {
-  left: 100%;
-}
-
-/* Icon inside button - subtle rotation on hover */
-.search-button-welcome span {
-  transition: transform 0.2s;
-}
-
-.search-button-welcome:hover span {
-  transform: rotate(15deg);
-}
-
-/* Optional: Add a loading state animation (if needed) */
-.search-button-welcome.loading {
-  animation: buttonPulse 1s infinite;
-  pointer-events: none;
-}
-
-
-
-/* ========== BRANDING (matches Welcome page) ========== */
-.brand-enhanced {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.brand-enhanced:hover {
-  transform: scale(1.02);
-}
-
-.logo-enhanced {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.logo-svg {
-  width: 28px;
-  height: 28px;
-  color: #ffffff;
-  filter: drop-shadow(0 0 6px #a78bfa);
-}
-
-.brand-name {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin: 0;
-  background: linear-gradient(135deg, #fff, #a78bfa, #ec4899);
-  background-size: 200% auto;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  animation: gradientFlow 4s ease infinite;
-}
-
-
-
-
-@keyframes gradientFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.brand-tagline {
-  font-size: 0.7rem;
-  margin: 0;
-  color: #f6f7f9;
-  letter-spacing: 0.5px;
-}
-
-/* Hide tagline on mobile to save space */
-@media (max-width: 768px) {
-  .brand-tagline {
-    display: none;
-  }
-  .brand-name {
-    font-size: 1.1rem;
-  }
-  .logo-svg {
-    width: 28px;
-    height: 28px;
-  }
-  .brand-enhanced {
-    gap: 0.4rem;
-  }
-}
-
-@keyframes buttonPulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.7; }
-  100% { opacity: 1; }
-}
-
-/* Responsive adjustments */
-@media (max-width: 1000px) {
-  .search-container-welcome {
-    display: none; /* or you can keep it smaller */
-  }
-}
-
-/* If you want to keep search bar on mobile as well */
-@media (max-width: 768px) {
-  .search-container-welcome {
-    display: flex;
-    max-width: 200px;
-    margin: 0 0.5rem;
-  }
-  .search-input-welcome {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
-  }
-  .search-button-welcome {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
-  }
-}
-
-/* ============================================
-   RESPONSIVE NAVBAR - COMPLETE SOLUTION
-   ============================================ */
-
-/* ---------- FIX: PROFILE DROPDOWN (NO OVERFLOW) ---------- */
-.user-dropdown-welcome {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  background: rgba(15, 15, 30, 0.98);
-  backdrop-filter: blur(20px);
-  border-radius: 1.2rem;
-  padding: 0.75rem;
-  min-width: 240px;
-  border: 1px solid rgba(99, 102, 241, 0.4);
-  box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
-  animation: dropdownFade 0.2s ease;
-  z-index: 99999;
-  pointer-events: auto;
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-/* Mobile: reposition dropdown as a bottom sheet (never overflows upward) */
-@media (max-width: 768px) {
-  .user-dropdown-welcome {
-    position: fixed;
-    bottom: 20px;
-    top: auto;
-    left: 20px;
-    right: 20px;
-    width: auto;
-    min-width: auto;
-    max-width: calc(100vw - 40px);
-    background: rgba(15, 15, 30, 0.98);
-    backdrop-filter: blur(24px);
-    border-radius: 1.5rem;
-    padding: 1rem;
-    animation: slideUp 0.25s ease;
-    z-index: 1006;
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ---------- MOBILE DRAWER (SHEET) & BACKDROP ---------- */
+/* ========== MOBILE DRAWER & BACKDROP ========== */
 .mobile-drawer-overlay {
   position: fixed;
   top: 0;
@@ -736,60 +364,17 @@ body {
   min-width: 32px;
 }
 
-.drawer-close-btn {
-  margin-top: auto;
-  background: rgba(239, 68, 68, 0.2) !important;
-  border: 1px solid rgba(239, 68, 68, 0.4) !important;
-  color: #f87171 !important;
+.drawer-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 0.5rem 0;
 }
 
-/* ---------- IMPROVED MOBILE TOGGLE (HAMBURGER) ---------- */
-.mobile-toggle-welcome {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 12px;
-  transition: all 0.2s ease;
-  width: 48px;
-  height: 48px;
-  z-index: 1005;
-  position: relative;
+body.drawer-open {
+  overflow: hidden;
 }
 
-.mobile-toggle-welcome:hover,
-.mobile-toggle-welcome:active {
-  background: rgba(99, 102, 241, 0.2);
-}
-
-.mobile-toggle-welcome span {
-  display: block;
-  width: 24px;
-  height: 2px;
-  background: linear-gradient(90deg, #a78bfa, #ec4899);
-  border-radius: 4px;
-  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-}
-
-/* Animated X when open */
-.mobile-toggle-welcome.open span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-}
-.mobile-toggle-welcome.open span:nth-child(2) {
-  opacity: 0;
-  transform: scaleX(0);
-}
-.mobile-toggle-welcome.open span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
-}
-
-/* ---------- RESPONSIVE BREAKPOINTS ---------- */
-/* Tablet and below: show hamburger, hide desktop nav */
+/* ========== RESPONSIVE BREAKPOINTS ========== */
 @media (max-width: 1000px) {
   .nav-links-welcome {
     display: none;
@@ -802,9 +387,12 @@ body {
   }
 }
 
-/* Mobile phones */
+/* On mobile: hide the profile dropdown, show avatar only as indicator */
 @media (max-width: 768px) {
-  /* Compact brand area */
+  .user-dropdown-welcome {
+    display: none;
+  }
+
   .brand-name {
     font-size: 1.1rem;
   }
@@ -818,31 +406,12 @@ body {
   .brand-enhanced {
     gap: 0.5rem;
   }
-
-  /* Compact warning indicator */
-  .gap-indicator-welcome {
-    padding: 0.3rem 0.7rem;
-  }
-  .gap-count {
-    font-size: 0.75rem;
-  }
-
-  /* Smaller avatar */
   .user-avatar-welcome {
     width: 38px;
     height: 38px;
   }
-  .avatar-initials {
-    font-size: 0.9rem;
-  }
-
-  /* Optional: hide gap icon text on very small screens */
-  .gap-indicator-welcome .gap-text {
-    display: none;
-  }
 }
 
-/* Very small devices (<=480px) */
 @media (max-width: 480px) {
   .navbar-container-welcome {
     padding: 0.5rem 0.8rem 0.5rem 0;
@@ -866,23 +435,3 @@ body {
     width: 20px;
   }
 }
-
-/* Prevent body scroll when drawer is open */
-body.drawer-open {
-  overflow: hidden;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
