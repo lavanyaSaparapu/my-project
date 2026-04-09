@@ -1,0 +1,630 @@
+/* ========== GLOBAL RESET ========== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #0f0f1a;
+  overflow-x: hidden;
+}
+
+/* ========== NAVBAR (FULL WIDTH, LOGO AT LEFT CORNER) ========== */
+.navbar-welcome {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1002;
+  background: rgba(10, 10, 20, 0.65);
+  backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Advanced: gradient border animation on scroll */
+.navbar-welcome.scrolled {
+  background: rgba(5, 5, 15, 0.92);
+  backdrop-filter: blur(20px) saturate(200%);
+  border-bottom-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Container – no left padding so logo touches left edge */
+.navbar-container-welcome {
+  width: 100%;
+  padding: 0.8rem 2rem 0.8rem 0;  /* left padding removed */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+/* ----- SINGLE LOGO (now at extreme left corner) ----- */
+.brand-enhanced {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), filter 0.3s;
+  margin-left: 0;        /* ensure no margin */
+  padding-left: 1rem;    /* small breathing space from edge, but still feels corner */
+  /* if you want absolutely no space, set padding-left: 0 and add a left margin to other elements */
+}
+/* Alternative: truly corner (uncomment if you want zero space) */
+/*
+.brand-enhanced {
+  padding-left: 0;
+}
+*/
+
+.brand-enhanced:hover {
+  transform: scale(1.02);
+  filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.5));
+}
+
+.navbar-welcome .brand-name {
+  font-size: 1.3rem;
+  margin: 0;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #a78bfa, #ec4899);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  transition: letter-spacing 0.2s;
+}
+
+.brand-enhanced:hover .brand-name {
+  letter-spacing: 0.5px;
+}
+
+.navbar-welcome .brand-tagline {
+  font-size: 0.65rem;
+  margin: 0;
+  color: #9ca3af;
+  transition: color 0.2s;
+}
+
+.brand-enhanced:hover .brand-tagline {
+  color: #cbd5e1;
+}
+
+/* ----- Navigation links (desktop) with advanced hover ----- */
+.nav-links-welcome {
+  display: flex;
+  gap: 0.25rem;
+  background: rgba(20, 20, 40, 0.6);
+  backdrop-filter: blur(8px);
+  padding: 0.3rem;
+  border-radius: 3rem;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  transition: all 0.3s;
+}
+
+.nav-links-welcome:hover {
+  border-color: rgba(99, 102, 241, 0.7);
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.2);
+}
+
+.nav-link-welcome {
+  position: relative;
+  background: transparent;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 2rem;
+  color: #cbd5e1;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.nav-link-welcome::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(99,102,241,0.3), transparent);
+  transition: left 0.4s;
+}
+
+.nav-link-welcome:hover::before {
+  left: 100%;
+}
+
+.nav-link-welcome:hover {
+  color: white;
+  background: rgba(99, 102, 241, 0.2);
+  transform: translateY(-2px);
+}
+
+.nav-link-welcome.active {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  transform: translateY(-1px);
+}
+
+.nav-link-welcome.active::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: #a78bfa;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #a78bfa;
+  animation: pulseDot 1.5s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.3); }
+}
+
+/* ----- Right actions (warning + profile) ----- */
+.nav-actions-welcome {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  overflow: visible;
+}
+
+/* Warning indicator with glassmorphism */
+.gap-indicator-welcome {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(239, 68, 68, 0.12);
+  padding: 0.4rem 1rem;
+  border-radius: 2rem;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  cursor: pointer;
+  transition: all 0.2s;
+  overflow: visible;
+  position: relative;
+  z-index: 5;
+  backdrop-filter: blur(4px);
+}
+
+.gap-indicator-welcome:hover {
+  background: rgba(239, 68, 68, 0.25);
+  transform: scale(1.02);
+  border-color: #f87171;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.3);
+}
+
+.gap-icon {
+  font-size: 1rem;
+  animation: subtleShake 2s ease infinite;
+}
+
+@keyframes subtleShake {
+  0%, 100% { transform: rotate(0deg); }
+  2% { transform: rotate(15deg); }
+  4% { transform: rotate(-10deg); }
+  6% { transform: rotate(5deg); }
+  8% { transform: rotate(0deg); }
+}
+
+.gap-count {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #f87171;
+  text-shadow: 0 0 4px rgba(239,68,68,0.5);
+}
+
+/* Profile avatar with glow */
+.user-avatar-welcome {
+  position: relative;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  border: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+  z-index: 100;
+}
+
+.user-avatar-welcome:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5), 0 0 0 6px rgba(99, 102, 241, 0.2);
+}
+
+.avatar-initials {
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+}
+
+.avatar-status-dot {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  background: #4ade80;
+  border-radius: 50%;
+  border: 2px solid #1e1e2f;
+  animation: pulseGreen 2s infinite;
+}
+
+@keyframes pulseGreen {
+  0%, 100% { box-shadow: 0 0 0 0 #4ade80; }
+  50% { box-shadow: 0 0 0 4px rgba(74,222,128,0.4); }
+}
+
+/* Profile dropdown - overlays everything */
+.user-dropdown-welcome {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: rgba(15, 15, 30, 0.98);
+  backdrop-filter: blur(20px);
+  border-radius: 1.2rem;
+  padding: 0.75rem;
+  min-width: 240px;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
+  animation: dropdownFade 0.2s ease;
+  z-index: 99999;
+  pointer-events: auto;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.dropdown-avatar {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+}
+
+.dropdown-email {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: white;
+  margin: 0;
+}
+
+.dropdown-role {
+  font-size: 0.7rem;
+  color: #a78bfa;
+  margin: 0;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+  margin: 0.5rem 0;
+}
+
+.user-dropdown-welcome button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  background: transparent;
+  border: none;
+  border-radius: 0.8rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+}
+
+.user-dropdown-welcome button:hover {
+  background: rgba(99, 102, 241, 0.2);
+  color: white;
+  transform: translateX(4px);
+}
+
+/* Mobile toggle */
+.mobile-toggle-welcome {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.mobile-toggle-welcome:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.mobile-toggle-welcome span {
+  width: 24px;
+  height: 2px;
+  background: linear-gradient(90deg, #a78bfa, #ec4899);
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+@media (max-width: 1000px) {
+  .nav-links-welcome { display: none; }
+  .mobile-toggle-welcome { display: flex; }
+  .gap-indicator-welcome .gap-count { display: none; }
+  .navbar-container-welcome { padding: 0.5rem 1rem 0.5rem 0; }
+}
+/* ========== SEARCH BAR WITH ADVANCED EFFECTS ========== */
+.search-container-welcome {
+  flex: 1;
+  max-width: 420px;
+  margin: 0 1.5rem;
+  position: relative;
+}
+
+.search-form-welcome {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+.search-input-welcome {
+  width: 100%;
+  padding: 0.6rem 1.2rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 2rem 0 0 2rem;
+  color: white;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+}
+
+/* Focus effect - glowing border */
+.search-input-welcome:focus {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #6366f1;
+  box-shadow: 0 0 12px rgba(99, 102, 241, 0.5), inset 0 0 4px rgba(99, 102, 241, 0.2);
+  transform: translateX(2px);
+}
+
+/* Hover effect */
+.search-input-welcome:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(99, 102, 241, 0.6);
+}
+
+.search-input-welcome::placeholder {
+  color: #9ca3af;
+  transition: color 0.2s;
+}
+
+.search-input-welcome:focus::placeholder {
+  color: #6366f1;
+  opacity: 0.7;
+}
+
+/* SEARCH BUTTON - with advanced effects */
+.search-button-welcome {
+  padding: 0.6rem 1.2rem;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  border: none;
+  border-radius: 0 2rem 2rem 0;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+}
+
+/* Glowing gradient animation on hover */
+.search-button-welcome:hover {
+  background: linear-gradient(135deg, #8183f5, #b86ef9);
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+/* Ripple effect on click */
+.search-button-welcome:active {
+  transform: scale(0.98);
+  transition: transform 0.05s;
+}
+
+/* Subtle pulse animation when focused (optional) */
+.search-button-welcome:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
+}
+
+/* Animated shimmer effect on button hover */
+.search-button-welcome::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.search-button-welcome:hover::before {
+  left: 100%;
+}
+
+/* Icon inside button - subtle rotation on hover */
+.search-button-welcome span {
+  transition: transform 0.2s;
+}
+
+.search-button-welcome:hover span {
+  transform: rotate(15deg);
+}
+
+/* Optional: Add a loading state animation (if needed) */
+.search-button-welcome.loading {
+  animation: buttonPulse 1s infinite;
+  pointer-events: none;
+}
+
+
+
+/* ========== BRANDING (matches Welcome page) ========== */
+.brand-enhanced {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.brand-enhanced:hover {
+  transform: scale(1.02);
+}
+
+.logo-enhanced {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-svg {
+  width: 28px;
+  height: 28px;
+  color: #ffffff;
+  filter: drop-shadow(0 0 6px #a78bfa);
+}
+
+.brand-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(135deg, #fff, #a78bfa, #ec4899);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradientFlow 4s ease infinite;
+}
+
+
+
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.brand-tagline {
+  font-size: 0.7rem;
+  margin: 0;
+  color: #f6f7f9;
+  letter-spacing: 0.5px;
+}
+
+/* Hide tagline on mobile to save space */
+@media (max-width: 768px) {
+  .brand-tagline {
+    display: none;
+  }
+  .brand-name {
+    font-size: 1.1rem;
+  }
+  .logo-svg {
+    width: 28px;
+    height: 28px;
+  }
+  .brand-enhanced {
+    gap: 0.4rem;
+  }
+}
+
+@keyframes buttonPulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1000px) {
+  .search-container-welcome {
+    display: none; /* or you can keep it smaller */
+  }
+}
+
+/* If you want to keep search bar on mobile as well */
+@media (max-width: 768px) {
+  .search-container-welcome {
+    display: flex;
+    max-width: 200px;
+    margin: 0 0.5rem;
+  }
+  .search-input-welcome {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  .search-button-welcome {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

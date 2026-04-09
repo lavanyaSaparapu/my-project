@@ -1,0 +1,282 @@
+/* ========== GLOBAL ========== */
+.pt-container {
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeInUp 0.5s ease;
+  background: #0f0f1a;
+  color: white;
+  min-height: calc(100vh - 70px);
+  margin-top: 80px;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ========== HEADER ========== */
+.pt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.pt-title {
+  font-size: 1.8rem;
+  background: linear-gradient(135deg, #fff, #a78bfa, #ec4899);
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: gradientFlow 4s ease infinite;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.title-icon { font-size: 1.8rem; filter: drop-shadow(0 0 6px #a78bfa); }
+
+.role-badge {
+  background: rgba(99,102,241,0.2);
+  padding: 0.4rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+}
+
+/* ========== OVERALL CIRCULAR ========== */
+.overall-card {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+.circular-chart {
+  width: 180px;
+  height: 180px;
+  filter: drop-shadow(0 0 12px rgba(99,102,241,0.4));
+  transition: transform 0.3s;
+}
+.circular-chart:hover { transform: scale(1.02); }
+
+/* ========== CONTROLS ========== */
+.controls-bar {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.view-buttons, .chart-type-buttons {
+  display: flex;
+  gap: 0.5rem;
+  background: rgba(20,20,40,0.5);
+  backdrop-filter: blur(8px);
+  padding: 0.3rem;
+  border-radius: 3rem;
+  border: 1px solid rgba(99,102,241,0.3);
+}
+.view-buttons button, .chart-type-buttons button {
+  background: transparent;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 2rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.view-buttons button.active, .chart-type-buttons button.active {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: white;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.4);
+}
+.view-buttons button:hover, .chart-type-buttons button:hover {
+  background: rgba(99,102,241,0.2);
+  color: white;
+}
+
+/* ========== CHART SECTION ========== */
+.chart-section {
+  background: rgba(20,20,40,0.5);
+  backdrop-filter: blur(12px);
+  border-radius: 1.5rem;
+  padding: 1.2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(99,102,241,0.2);
+  transition: all 0.3s;
+}
+.chart-section:hover {
+  border-color: rgba(99,102,241,0.5);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+.section-title {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Custom tooltip for charts – dark background, readable */
+.chart-tooltip-custom {
+  background: rgba(10, 10, 25, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 0.5rem 1rem;
+  border-radius: 0.8rem;
+  border: 1px solid #a78bfa;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+.chart-tooltip-custom .tooltip-label {
+  font-weight: bold;
+  margin-bottom: 0.2rem;
+  color: #e2e8f0;
+}
+.chart-tooltip-custom .tooltip-value {
+  color: #a78bfa;
+  font-size: 0.9rem;
+}
+
+/* ========== SKILLS SECTION ========== */
+.skills-section {
+  background: rgba(20,20,40,0.5);
+  backdrop-filter: blur(12px);
+  border-radius: 1.5rem;
+  padding: 1.2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(99,102,241,0.2);
+}
+.skills-list { display: flex; flex-direction: column; gap: 1rem; }
+.skill-card {
+  background: rgba(10,10,25,0.6);
+  border-radius: 1rem;
+  padding: 0.8rem;
+  transition: all 0.2s;
+}
+.skill-card:hover {
+  transform: translateX(5px);
+  background: rgba(20,20,40,0.8);
+  border-left: 3px solid #a78bfa;
+}
+.skill-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+.skill-icon { font-size: 1.3rem; }
+.skill-name { flex: 1; font-weight: 600; }
+.skill-xp { font-size: 0.75rem; background: rgba(99,102,241,0.2); padding: 0.2rem 0.5rem; border-radius: 1rem; color: #a78bfa; }
+.skill-bar-container {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0.5rem 0;
+}
+.skill-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+.skill-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
+  background-size: 200% auto;
+  border-radius: 1rem;
+  transition: width 0.6s cubic-bezier(0.2,0.9,0.4,1.1);
+  position: relative;
+  animation: fillGlow 2s ease infinite;
+}
+@keyframes fillGlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.skill-percent { font-size: 0.8rem; font-weight: 500; min-width: 40px; text-align: right; }
+.skill-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+.learn-btn {
+  background: rgba(99,102,241,0.2);
+  border: 1px solid rgba(99,102,241,0.4);
+  padding: 0.2rem 0.8rem;
+  border-radius: 1.5rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.75rem;
+}
+.learn-btn:hover:not(:disabled) {
+  background: rgba(99,102,241,0.4);
+  transform: scale(1.02);
+  color: white;
+}
+.learn-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ========== STREAK CARD (centered, no weird margins) ========== */
+.streak-card {
+  background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(239,68,68,0.15));
+  backdrop-filter: blur(12px);
+  border-radius: 1.2rem;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  border: 1px solid rgba(245,158,11,0.4);
+  animation: pulseGlow 2s infinite;
+  max-width: 300px;
+  margin: 0 auto 1rem auto;
+  width: fit-content;
+  margin-top: 5rem;
+}
+@keyframes pulseGlow {
+  0% { border-color: rgba(245,158,11,0.4); box-shadow: 0 0 0 0 rgba(245,158,11,0.2); }
+  50% { border-color: rgba(239,68,68,0.7); box-shadow: 0 0 12px 0 rgba(239,68,68,0.3); }
+  100% { border-color: rgba(245,158,11,0.4); box-shadow: 0 0 0 0 rgba(245,158,11,0.2); }
+}
+.streak-flame { display: flex; justify-content: center; gap: 0.3rem; margin-bottom: 0.5rem; }
+.streak-count { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #f59e0b, #ef4444); background-clip: text; -webkit-background-clip: text; color: transparent; }
+.streak-text { font-size: 0.9rem; color: #cbd5e1; }
+
+/* ========== XP POPUP ========== */
+.xp-popup {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, #10b981, #22c55e);
+  padding: 0.6rem 1.2rem;
+  border-radius: 2rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: popupFade 2s ease forwards;
+  z-index: 10000;
+}
+@keyframes popupFade {
+  0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+  20% { opacity: 1; transform: scale(1.05); }
+  80% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.8) translateY(-20px); visibility: hidden; }
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .pt-container { padding: 1rem; }
+  .pt-header { flex-direction: column; align-items: stretch; }
+  .controls-bar { flex-direction: column; }
+  .view-buttons, .chart-type-buttons { justify-content: center; }
+  .skill-actions { justify-content: stretch; }
+  .learn-btn { flex: 1; text-align: center; }
+  .streak-card { width: 90%; }
+}
