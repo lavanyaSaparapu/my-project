@@ -261,21 +261,23 @@
   cursor: not-allowed; 
 }
 
-/* ========== STREAK CARD – FIXED & RESPONSIVE ========== */
+/* ========== STREAK CARD – FULLY RESPONSIVE, NO OVERFLOW ========== */
 .streak-card {
   background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(239,68,68,0.15));
   backdrop-filter: blur(12px);
   border-radius: 1.2rem;
-  padding: 1rem 1.25rem;
+  padding: 0.8rem 1rem;
   text-align: center;
   border: 1px solid rgba(245,158,11,0.4);
   animation: pulseGlow 2s infinite;
   margin: 2rem auto 1rem auto;
-  width: 100%;
-  max-width: 320px;
+  width: calc(100% - 2rem);
+  max-width: 300px;
+  min-width: 0;
   box-sizing: border-box;
-  overflow: hidden;
-  min-width: 0;                    /* Prevents overflow */
+  overflow: visible;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 @keyframes pulseGlow {
@@ -297,22 +299,24 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 6px;
-  font-size: 1.35rem;
-  margin-bottom: 8px;
+  gap: 0.3rem;
   flex-wrap: wrap;
-  line-height: 1;
+  font-size: 1.3rem;
+  margin-bottom: 0.3rem;
+  line-height: 1.2;
 }
 
 .streak-count {
-  font-size: 1.85rem;
+  font-size: 1.8rem;
   font-weight: 800;
   background: linear-gradient(135deg, #f59e0b, #ef4444);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   display: inline-block;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-all;
+  max-width: 100%;
 }
 
 .streak-text {
@@ -321,7 +325,29 @@
   line-height: 1.35;
   word-break: break-word;
   overflow-wrap: break-word;
-  hyphens: auto;
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* ========== XP POPUP ========== */
+.xp-popup {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, #10b981, #22c55e);
+  padding: 0.6rem 1.2rem;
+  border-radius: 2rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  animation: popupFade 2s ease forwards;
+  z-index: 10000;
+}
+@keyframes popupFade {
+  0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+  20% { opacity: 1; transform: scale(1.05); }
+  80% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0.8) translateY(-20px); visibility: hidden; }
 }
 
 /* ========== RESPONSIVE (MOBILE) ========== */
@@ -389,19 +415,18 @@
 
   /* Streak Card - Mobile */
   .streak-card {
-    max-width: 100%;
-    margin: 1.5rem auto 1rem auto;
-    padding: 0.95rem 1.1rem;
-    border-radius: 1.1rem;
+    width: calc(100% - 2rem);
+    max-width: 280px;
+    padding: 0.7rem 0.9rem;
   }
 
   .streak-flame {
-    font-size: 1.25rem;
-    gap: 5px;
+    font-size: 1.2rem;
+    gap: 0.25rem;
   }
 
   .streak-count {
-    font-size: 1.65rem;
+    font-size: 1.6rem;
   }
 
   .streak-text {
@@ -427,42 +452,44 @@
   }
 
   .streak-card {
-    padding: 0.85rem 1rem;
-    border-radius: 1rem;
+    width: calc(100% - 1.5rem);
+    max-width: 260px;
+    padding: 0.6rem 0.8rem;
   }
 
   .streak-flame {
-    font-size: 1.15rem;
-    gap: 4px;
+    font-size: 1.1rem;
+    gap: 0.2rem;
   }
 
   .streak-count {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .streak-text {
-    font-size: 0.82rem;
-    line-height: 1.3;
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 0.2rem;
   }
 }
 
 @media (max-width: 360px) {
   .streak-card {
-    padding: 0.75rem 0.9rem;
-    border-radius: 0.95rem;
+    width: calc(100% - 1rem);
+    max-width: 240px;
+    padding: 0.5rem 0.6rem;
   }
 
   .streak-flame {
-    font-size: 1.05rem;
-    gap: 4px;
+    font-size: 1rem;
+    gap: 0.15rem;
   }
 
   .streak-count {
-    font-size: 1.35rem;
+    font-size: 1.2rem;
   }
 
   .streak-text {
-    font-size: 0.78rem;
-    line-height: 1.25;
+    font-size: 0.75rem;
   }
 }
