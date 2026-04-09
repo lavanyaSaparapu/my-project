@@ -612,9 +612,61 @@ body {
   }
 }
 
-/* ========== MOBILE DRAWER (SHEET) & OVERLAY ========== */
+/* ============================================
+   RESPONSIVE NAVBAR - COMPLETE SOLUTION
+   ============================================ */
 
-/* Backdrop overlay when drawer is open */
+/* ---------- FIX: PROFILE DROPDOWN (NO OVERFLOW) ---------- */
+.user-dropdown-welcome {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: rgba(15, 15, 30, 0.98);
+  backdrop-filter: blur(20px);
+  border-radius: 1.2rem;
+  padding: 0.75rem;
+  min-width: 240px;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
+  animation: dropdownFade 0.2s ease;
+  z-index: 99999;
+  pointer-events: auto;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+/* Mobile: reposition dropdown as a bottom sheet (never overflows upward) */
+@media (max-width: 768px) {
+  .user-dropdown-welcome {
+    position: fixed;
+    bottom: 20px;
+    top: auto;
+    left: 20px;
+    right: 20px;
+    width: auto;
+    min-width: auto;
+    max-width: calc(100vw - 40px);
+    background: rgba(15, 15, 30, 0.98);
+    backdrop-filter: blur(24px);
+    border-radius: 1.5rem;
+    padding: 1rem;
+    animation: slideUp 0.25s ease;
+    z-index: 1006;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------- MOBILE DRAWER (SHEET) & BACKDROP ---------- */
 .mobile-drawer-overlay {
   position: fixed;
   top: 0;
@@ -632,7 +684,6 @@ body {
   to { opacity: 1; }
 }
 
-/* Drawer/sheet that slides in from right */
 .mobile-drawer-welcome {
   position: fixed;
   top: 0;
@@ -646,22 +697,17 @@ body {
   padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
   border-left: 1px solid rgba(99, 102, 241, 0.4);
   animation: slideInRight 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
   overflow-y: auto;
 }
 
 @keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0);
-  }
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
 }
 
-/* Drawer buttons */
 .mobile-drawer-welcome button {
   display: flex;
   align-items: center;
@@ -679,7 +725,6 @@ body {
   width: 100%;
 }
 
-.mobile-drawer-welcome button:hover,
 .mobile-drawer-welcome button:active {
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(168, 85, 247, 0.2));
   transform: translateX(4px);
@@ -691,7 +736,6 @@ body {
   min-width: 32px;
 }
 
-/* Close drawer button (optional, but user can click outside or toggle) */
 .drawer-close-btn {
   margin-top: auto;
   background: rgba(239, 68, 68, 0.2) !important;
@@ -699,12 +743,7 @@ body {
   color: #f87171 !important;
 }
 
-.drawer-close-btn:hover {
-  background: rgba(239, 68, 68, 0.4) !important;
-  transform: translateX(0) !important;
-}
-
-/* ========== IMPROVED MOBILE TOGGLE (HAMBURGER) ========== */
+/* ---------- IMPROVED MOBILE TOGGLE (HAMBURGER) ---------- */
 .mobile-toggle-welcome {
   display: none;
   flex-direction: column;
@@ -714,16 +753,17 @@ body {
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 8px;
+  padding: 10px;
   border-radius: 12px;
   transition: all 0.2s ease;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   z-index: 1005;
   position: relative;
 }
 
-.mobile-toggle-welcome:hover {
+.mobile-toggle-welcome:hover,
+.mobile-toggle-welcome:active {
   background: rgba(99, 102, 241, 0.2);
 }
 
@@ -736,102 +776,98 @@ body {
   transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
-/* Animated hamburger when open */
+/* Animated X when open */
 .mobile-toggle-welcome.open span:nth-child(1) {
   transform: rotate(45deg) translate(5px, 5px);
 }
-
 .mobile-toggle-welcome.open span:nth-child(2) {
   opacity: 0;
   transform: scaleX(0);
 }
-
 .mobile-toggle-welcome.open span:nth-child(3) {
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* ========== MOBILE DROPDOWN (USER MENU) FIXES ========== */
-@media (max-width: 768px) {
-  .user-dropdown-welcome {
-    position: fixed;
-    top: auto;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    width: auto;
-    min-width: auto;
-    background: rgba(15, 15, 30, 0.98);
-    backdrop-filter: blur(24px);
-    border-radius: 1.5rem;
-    padding: 1rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-    animation: slideUp 0.25s ease;
-    z-index: 1006;
+/* ---------- RESPONSIVE BREAKPOINTS ---------- */
+/* Tablet and below: show hamburger, hide desktop nav */
+@media (max-width: 1000px) {
+  .nav-links-welcome {
+    display: none;
   }
-
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .mobile-toggle-welcome {
+    display: flex;
   }
-
-  .user-dropdown-welcome button {
-    padding: 0.8rem 1rem;
-    font-size: 1rem;
-  }
-
-  .user-avatar-welcome {
-    width: 38px;
-    height: 38px;
-  }
-
-  /* Adjust navbar container padding for small devices */
   .navbar-container-welcome {
     padding: 0.6rem 1rem 0.6rem 0;
   }
+}
 
-  /* Make brand logo slightly smaller */
-  .brand-enhanced {
-    gap: 0.5rem;
-  }
-
+/* Mobile phones */
+@media (max-width: 768px) {
+  /* Compact brand area */
   .brand-name {
     font-size: 1.1rem;
   }
-
+  .brand-tagline {
+    display: none;
+  }
   .logo-svg {
     width: 28px;
     height: 28px;
   }
-
-  /* Hide tagline on very small screens */
-  .brand-tagline {
-    display: none;
+  .brand-enhanced {
+    gap: 0.5rem;
   }
 
-  /* Warning indicator on mobile - compact */
+  /* Compact warning indicator */
   .gap-indicator-welcome {
     padding: 0.3rem 0.7rem;
   }
-
   .gap-count {
     font-size: 0.75rem;
   }
-}
 
-/* Show mobile toggle only on smaller screens */
-@media (max-width: 1000px) {
-  .mobile-toggle-welcome {
-    display: flex;
+  /* Smaller avatar */
+  .user-avatar-welcome {
+    width: 38px;
+    height: 38px;
+  }
+  .avatar-initials {
+    font-size: 0.9rem;
+  }
+
+  /* Optional: hide gap icon text on very small screens */
+  .gap-indicator-welcome .gap-text {
+    display: none;
   }
 }
 
-/* ========== PREVENT BODY SCROLL WHEN DRAWER OPEN ========== */
+/* Very small devices (<=480px) */
+@media (max-width: 480px) {
+  .navbar-container-welcome {
+    padding: 0.5rem 0.8rem 0.5rem 0;
+  }
+  .brand-name {
+    font-size: 0.95rem;
+  }
+  .logo-svg {
+    width: 24px;
+    height: 24px;
+  }
+  .user-avatar-welcome {
+    width: 34px;
+    height: 34px;
+  }
+  .mobile-toggle-welcome {
+    width: 40px;
+    height: 40px;
+  }
+  .mobile-toggle-welcome span {
+    width: 20px;
+  }
+}
+
+/* Prevent body scroll when drawer is open */
 body.drawer-open {
   overflow: hidden;
 }
