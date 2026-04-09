@@ -8,6 +8,7 @@
   color: white;
   min-height: calc(100vh - 70px);
   margin-top: 80px;
+  overflow-x: hidden;
 }
 
 @keyframes fadeInUp {
@@ -36,6 +37,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  white-space: nowrap;
 }
 
 @keyframes gradientFlow {
@@ -52,6 +54,7 @@
   border-radius: 2rem;
   font-size: 0.9rem;
   color: #cbd5e1;
+  white-space: nowrap;
 }
 
 /* ========== OVERALL CIRCULAR ========== */
@@ -84,6 +87,7 @@
   padding: 0.3rem;
   border-radius: 3rem;
   border: 1px solid rgba(99,102,241,0.3);
+  flex-wrap: wrap;
 }
 .view-buttons button, .chart-type-buttons button {
   background: transparent;
@@ -93,6 +97,8 @@
   color: #cbd5e1;
   cursor: pointer;
   transition: all 0.2s;
+  font-size: 0.85rem;
+  white-space: nowrap;
 }
 .view-buttons button.active, .chart-type-buttons button.active {
   background: linear-gradient(135deg, #6366f1, #a855f7);
@@ -171,15 +177,17 @@
   align-items: center;
   gap: 0.8rem;
   margin-bottom: 0.5rem;
+  flex-wrap: wrap;
 }
 .skill-icon { font-size: 1.3rem; }
 .skill-name { flex: 1; font-weight: 600; }
-.skill-xp { font-size: 0.75rem; background: rgba(99,102,241,0.2); padding: 0.2rem 0.5rem; border-radius: 1rem; color: #a78bfa; }
+.skill-xp { font-size: 0.75rem; background: rgba(99,102,241,0.2); padding: 0.2rem 0.5rem; border-radius: 1rem; color: #a78bfa; white-space: nowrap; }
 .skill-bar-container {
   display: flex;
   align-items: center;
   gap: 0.8rem;
   margin: 0.5rem 0;
+  flex-wrap: wrap;
 }
 .skill-bar-bg {
   flex: 1;
@@ -226,7 +234,7 @@
 }
 .learn-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* ========== STREAK CARD (centered, no weird margins) ========== */
+/* ========== STREAK CARD (FIXED OVERFLOW) ========== */
 .streak-card {
   background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(239,68,68,0.15));
   backdrop-filter: blur(12px);
@@ -235,19 +243,38 @@
   text-align: center;
   border: 1px solid rgba(245,158,11,0.4);
   animation: pulseGlow 2s infinite;
-  max-width: 300px;
-  margin: 0 auto 1rem auto;
+  margin: 2rem auto 1rem auto;
   width: fit-content;
-  margin-top: 5rem;
+  max-width: 90%;
+  box-sizing: border-box;
 }
 @keyframes pulseGlow {
   0% { border-color: rgba(245,158,11,0.4); box-shadow: 0 0 0 0 rgba(245,158,11,0.2); }
   50% { border-color: rgba(239,68,68,0.7); box-shadow: 0 0 12px 0 rgba(239,68,68,0.3); }
   100% { border-color: rgba(245,158,11,0.4); box-shadow: 0 0 0 0 rgba(245,158,11,0.2); }
 }
-.streak-flame { display: flex; justify-content: center; gap: 0.3rem; margin-bottom: 0.5rem; }
-.streak-count { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #f59e0b, #ef4444); background-clip: text; -webkit-background-clip: text; color: transparent; }
-.streak-text { font-size: 0.9rem; color: #cbd5e1; }
+.streak-flame { 
+  display: flex; 
+  justify-content: center; 
+  gap: 0.3rem; 
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+}
+.streak-count { 
+  font-size: 2rem; 
+  font-weight: 800; 
+  background: linear-gradient(135deg, #f59e0b, #ef4444); 
+  background-clip: text; 
+  -webkit-background-clip: text; 
+  color: transparent;
+  display: inline-block;
+}
+.streak-text { 
+  font-size: 0.9rem; 
+  color: #cbd5e1;
+  word-break: keep-all;
+  white-space: nowrap;
+}
 
 /* ========== XP POPUP ========== */
 .xp-popup {
@@ -270,13 +297,118 @@
   100% { opacity: 0; transform: scale(0.8) translateY(-20px); visibility: hidden; }
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== RESPONSIVE (MOBILE FIRST) ========== */
 @media (max-width: 768px) {
-  .pt-container { padding: 1rem; }
-  .pt-header { flex-direction: column; align-items: stretch; }
-  .controls-bar { flex-direction: column; }
-  .view-buttons, .chart-type-buttons { justify-content: center; }
-  .skill-actions { justify-content: stretch; }
-  .learn-btn { flex: 1; text-align: center; }
-  .streak-card { width: 90%; }
+  .pt-container {
+    padding: 1rem;
+    margin-top: 70px;
+  }
+
+  .pt-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .pt-title {
+    font-size: 1.4rem;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .title-icon {
+    font-size: 1.4rem;
+  }
+
+  .role-badge {
+    white-space: normal;
+    text-align: center;
+  }
+
+  .controls-bar {
+    flex-direction: column;
+  }
+
+  .view-buttons, .chart-type-buttons {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .view-buttons button, .chart-type-buttons button {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.75rem;
+  }
+
+  .skill-header {
+    flex-wrap: wrap;
+  }
+
+  .skill-xp {
+    margin-left: auto;
+  }
+
+  .skill-bar-container {
+    flex-wrap: wrap;
+  }
+
+  .skill-actions {
+    justify-content: stretch;
+  }
+
+  .learn-btn {
+    flex: 1;
+    text-align: center;
+    padding: 0.3rem 0.5rem;
+  }
+
+  /* Streak card – prevent overflow */
+  .streak-card {
+    width: auto;
+    max-width: calc(100% - 2rem);
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding: 0.8rem 1rem;
+  }
+
+  .streak-text {
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .streak-count {
+    font-size: 1.8rem;
+  }
+
+  .streak-flame {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pt-title {
+    font-size: 1.2rem;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+  }
+
+  .skill-name {
+    font-size: 0.85rem;
+  }
+
+  .skill-xp {
+    font-size: 0.7rem;
+  }
+
+  .streak-card {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .streak-count {
+    font-size: 1.5rem;
+  }
+
+  .streak-text {
+    font-size: 0.8rem;
+  }
 }
