@@ -250,10 +250,7 @@ export default function ProgressTracking() {
         </div>
       </div>
 
-      <div className="streak-card">
-        <div className="streak-flame">🔥🔥🔥</div>
-        <div className="streak-text"><span className="streak-count">12</span> Day Learning Streak</div>
-      </div>
+      {/* Streak card removed */}
     </div>
   );
 }
