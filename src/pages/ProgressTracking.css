@@ -275,6 +275,7 @@
   max-width: 320px;
   box-sizing: border-box;
   overflow: hidden;
+  min-width: 0;                    /* Prevents overflow */
 }
 
 @keyframes pulseGlow {
@@ -317,30 +318,10 @@
 .streak-text {
   font-size: 0.9rem;
   color: #cbd5e1;
-  line-height: 1.3;
+  line-height: 1.35;
   word-break: break-word;
   overflow-wrap: break-word;
-}
-
-/* ========== XP POPUP ========== */
-.xp-popup {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background: linear-gradient(135deg, #10b981, #22c55e);
-  padding: 0.6rem 1.2rem;
-  border-radius: 2rem;
-  font-weight: bold;
-  color: white;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  animation: popupFade 2s ease forwards;
-  z-index: 10000;
-}
-@keyframes popupFade {
-  0% { opacity: 0; transform: scale(0.8) translateY(20px); }
-  20% { opacity: 1; transform: scale(1.05); }
-  80% { opacity: 1; transform: scale(1); }
-  100% { opacity: 0; transform: scale(0.8) translateY(-20px); visibility: hidden; }
+  hyphens: auto;
 }
 
 /* ========== RESPONSIVE (MOBILE) ========== */
@@ -410,20 +391,21 @@
   .streak-card {
     max-width: 100%;
     margin: 1.5rem auto 1rem auto;
-    padding: 0.85rem 1rem;
+    padding: 0.95rem 1.1rem;
+    border-radius: 1.1rem;
   }
 
   .streak-flame {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     gap: 5px;
   }
 
   .streak-count {
-    font-size: 1.55rem;
+    font-size: 1.65rem;
   }
 
   .streak-text {
-    font-size: 0.82rem;
+    font-size: 0.85rem;
   }
 }
 
@@ -445,40 +427,42 @@
   }
 
   .streak-card {
-    padding: 0.75rem 0.9rem;
+    padding: 0.85rem 1rem;
     border-radius: 1rem;
   }
 
   .streak-flame {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     gap: 4px;
   }
 
   .streak-count {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
   }
 
   .streak-text {
-    font-size: 0.78rem;
+    font-size: 0.82rem;
+    line-height: 1.3;
   }
 }
 
 @media (max-width: 360px) {
   .streak-card {
-    padding: 0.65rem 0.8rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: 0.95rem;
   }
 
   .streak-flame {
-    font-size: 1rem;
+    font-size: 1.05rem;
     gap: 4px;
   }
 
   .streak-count {
-    font-size: 1.25rem;
+    font-size: 1.35rem;
   }
 
   .streak-text {
-    font-size: 0.73rem;
+    font-size: 0.78rem;
     line-height: 1.25;
   }
 }
