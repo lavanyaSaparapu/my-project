@@ -82,6 +82,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  white-space: nowrap;
 }
 
 @keyframes gradientFlow {
@@ -121,6 +122,7 @@
 .role-selector label {
   color: #cbd5e1;
   font-weight: 500;
+  white-space: nowrap;
 }
 
 .role-select {
@@ -134,11 +136,12 @@
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  min-width: 180px;
 }
 
 .role-select option {
   background: #0f0f1a;
-  color:white;
+  color: white;
 }
 
 .role-select:hover {
@@ -276,7 +279,7 @@
   50% { opacity: 0.6; transform: scale(1.2); }
 }
 
-/* ========== COMPACT RADAR TOOLTIP (smaller gap card) ========== */
+/* ========== COMPACT RADAR TOOLTIP ========== */
 .radar-tooltip-enhanced {
   background: rgba(10, 10, 25, 0.98);
   backdrop-filter: blur(16px);
@@ -681,44 +684,155 @@
   box-shadow: 0 0 12px rgba(236, 72, 153, 0.5);
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== RESPONSIVE FIXES (MOBILE) ========== */
 @media (max-width: 768px) {
   .dashboard {
     padding: 1rem;
+    margin-top: 70px;
   }
+
   .dashboard-header {
     flex-direction: column;
     align-items: stretch;
+    gap: 0.8rem;
   }
+
+  .dashboard-title {
+    font-size: 1.5rem;
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  .title-icon {
+    font-size: 1.5rem;
+  }
+
   .role-selector {
     justify-content: space-between;
+    width: 100%;
+    padding: 0.4rem 1rem;
+    box-sizing: border-box;
   }
+
+  .role-selector label {
+    font-size: 0.9rem;
+  }
+
+  .role-select {
+    min-width: auto;
+    width: auto;
+    flex: 1;
+    max-width: 220px;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+
   .bottom-section {
     grid-template-columns: 1fr;
   }
+
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
   }
+
+  .stat-card {
+    padding: 0.8rem;
+  }
+
+  .stat-icon {
+    font-size: 1.8rem;
+  }
+
+  .stat-card p {
+    font-size: 1.4rem;
+  }
+
   .blob {
     display: none;
   }
+
   .best-match-card {
     flex-direction: column;
     text-align: center;
+    gap: 0.8rem;
+    padding: 1rem;
   }
+
   .best-match-role {
     font-size: 1.4rem;
   }
+
+  .best-match-score {
+    justify-content: center;
+  }
+
   .skill-slider-item label {
     width: 90px;
+    font-size: 0.75rem;
   }
+
   .skills-grid {
     grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+
+  .progress-item {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .progress-item > span:first-child {
+    width: 100%;
+    font-size: 0.85rem;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 24px;
+  }
+
+  .progress-fill span {
+    font-size: 0.65rem;
+    padding: 1px 4px;
+  }
+
+  .radar-container {
+    min-height: 280px;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
   }
 }
 
 @media (max-width: 480px) {
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-title {
+    font-size: 1.3rem;
+  }
+
+  .role-selector {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    border-radius: 1.5rem;
+  }
+
+  .role-select {
+    width: 100%;
+    max-width: none;
+  }
+
+  .best-match-role {
+    font-size: 1.2rem;
+  }
+
+  .radar-legend {
+    gap: 1rem;
+    font-size: 0.75rem;
   }
 }
