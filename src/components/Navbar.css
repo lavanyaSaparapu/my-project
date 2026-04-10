@@ -32,11 +32,11 @@ body {
 
 .navbar-container-welcome {
   width: 100%;
-  padding: 0.8rem 2rem 0.8rem 0;
+  padding: 0.8rem 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-sizing: border-box;
+  gap: 1rem;
   flex-wrap: nowrap;
 }
 
@@ -47,8 +47,7 @@ body {
   gap: 0.75rem;
   cursor: pointer;
   transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), filter 0.3s;
-  margin-left: 0;
-  padding-left: 1rem;
+  flex-shrink: 0;
 }
 
 .brand-enhanced:hover {
@@ -82,18 +81,19 @@ body {
   color: #cbd5e1;
 }
 
-/* ----- DESKTOP NAV LINKS ----- */
+/* ----- DESKTOP NAV LINKS - ALL 4 VISIBLE ----- */
 .nav-links-welcome {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.5rem;
   background: rgba(20, 20, 40, 0.6);
   backdrop-filter: blur(8px);
-  padding: 0.3rem;
+  padding: 0.3rem 0.6rem;
   border-radius: 3rem;
   border: 1px solid rgba(99, 102, 241, 0.3);
   transition: all 0.3s;
   flex-wrap: nowrap;
-  white-space: nowrap;
+  overflow-x: visible;
+  margin: 0 auto; /* center the nav links */
 }
 
 .nav-links-welcome:hover {
@@ -115,7 +115,7 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  overflow: hidden;
+  white-space: nowrap;
 }
 
 .nav-link-welcome::before {
@@ -167,21 +167,17 @@ body {
 
 /* ----- RIGHT ACTIONS ----- */
 .nav-actions-welcome {
-  position: relative;
   display: flex;
   align-items: center;
   gap: 1.2rem;
-  overflow: visible;
+  flex-shrink: 0;
 }
 
-/* User menu container (for absolute dropdown) */
 .user-menu-welcome {
   position: relative;
 }
 
-/* Avatar */
 .user-avatar-welcome {
-  position: relative;
   background: linear-gradient(135deg, #6366f1, #a855f7);
   border: none;
   width: 42px;
@@ -193,7 +189,8 @@ body {
   cursor: pointer;
   transition: all 0.3s;
   box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
-  z-index: 100;
+  color: white;
+  font-weight: bold;
 }
 
 .user-avatar-welcome:hover {
@@ -201,7 +198,6 @@ body {
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5), 0 0 0 6px rgba(99, 102, 241, 0.2);
 }
 
-/* Desktop dropdown (downward) */
 .user-dropdown-welcome {
   position: absolute;
   top: calc(100% + 10px);
@@ -215,20 +211,11 @@ body {
   box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
   animation: dropdownFade 0.2s ease;
   z-index: 99999;
-  pointer-events: auto;
-  max-height: 80vh;
-  overflow-y: auto;
 }
 
 @keyframes dropdownFade {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .user-dropdown-welcome button {
@@ -253,7 +240,7 @@ body {
   transform: translateX(4px);
 }
 
-/* ========== MOBILE TOGGLE (HAMBURGER) ========== */
+/* ========== MOBILE TOGGLE ========== */
 .mobile-toggle-welcome {
   display: none;
   flex-direction: column;
@@ -268,8 +255,6 @@ body {
   transition: all 0.2s ease;
   width: 48px;
   height: 48px;
-  z-index: 1005;
-  position: relative;
 }
 
 .mobile-toggle-welcome:hover,
@@ -297,7 +282,7 @@ body {
   transform: rotate(-45deg) translate(5px, -5px);
 }
 
-/* ========== MOBILE DRAWER & BACKDROP ========== */
+/* ========== MOBILE DRAWER ========== */
 .mobile-drawer-overlay {
   position: fixed;
   top: 0;
@@ -378,24 +363,32 @@ body.drawer-open {
 }
 
 /* ========== RESPONSIVE BREAKPOINTS ========== */
-@media (max-width: 1000px) {
+@media (max-width: 1100px) {
+  .nav-link-welcome {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.85rem;
+  }
   .nav-links-welcome {
-    display: none;
+    gap: 0.3rem;
+  }
+}
+
+@media (max-width: 950px) {
+  .nav-links-welcome {
+    display: none; /* hide desktop nav, show hamburger */
   }
   .mobile-toggle-welcome {
     display: flex;
   }
   .navbar-container-welcome {
-    padding: 0.6rem 1rem 0.6rem 0;
+    padding: 0.6rem 1rem;
   }
 }
 
-/* On mobile: hide the profile dropdown, show avatar only as indicator */
 @media (max-width: 768px) {
   .user-dropdown-welcome {
     display: none;
   }
-
   .brand-name {
     font-size: 1.1rem;
   }
@@ -417,7 +410,7 @@ body.drawer-open {
 
 @media (max-width: 480px) {
   .navbar-container-welcome {
-    padding: 0.5rem 0.8rem 0.5rem 0;
+    padding: 0.5rem 0.8rem;
   }
   .brand-name {
     font-size: 0.95rem;

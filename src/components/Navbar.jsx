@@ -14,12 +14,12 @@ const Navbar = () => {
 
   const userMenuRef = useRef(null);
 
-  // Nav items
+  // Nav items – Practice is now clearly included
   const navItems = [
     { path: "/dashboard", label: "Dashboard", icon: "🏠" },
     { path: "/learning-path", label: "Learning Path", icon: "🗺️" },
     { path: "/progress-tracking", label: "Progress", icon: "📶" },
-    { path: "/practice", label: "Practice", icon: "🎯" },
+    { path: "/practice", label: "Practice", icon: "🎯" },   // ✅ Practice added
   ];
 
   // Scroll effect
@@ -29,7 +29,7 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close dropdown when clicking outside (desktop only)
+  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
@@ -57,7 +57,6 @@ const Navbar = () => {
     navigate("/signin");
   };
 
-  // Open drawer – also close user dropdown (if open)
   const openDrawer = () => {
     setUserMenuOpen(false);
     setMobileMenuOpen(true);
@@ -83,7 +82,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* DESKTOP NAVIGATION LINKS */}
+          {/* DESKTOP NAVIGATION LINKS - all 4 items visible */}
           <div className="nav-links-welcome">
             {navItems.map((item) => (
               <button
@@ -99,7 +98,6 @@ const Navbar = () => {
 
           {/* RIGHT SIDE ACTIONS */}
           <div className="nav-actions-welcome">
-            {/* User Menu (Desktop only – dropdown) */}
             <div className="user-menu-welcome" ref={userMenuRef}>
               <button
                 className="user-avatar-welcome"
@@ -108,7 +106,6 @@ const Navbar = () => {
                 {auth.currentUser?.email?.charAt(0).toUpperCase() || "U"}
               </button>
 
-              {/* Desktop dropdown – hidden on mobile via CSS */}
               {userMenuOpen && (
                 <div className="user-dropdown-welcome">
                   <button onClick={() => navigate("/settings")}>⚙️ Settings</button>
@@ -118,7 +115,6 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* Mobile Toggle with animated X */}
             <button
               className={`mobile-toggle-welcome ${mobileMenuOpen ? "open" : ""}`}
               onClick={openDrawer}
@@ -133,13 +129,10 @@ const Navbar = () => {
 
       {/* MOBILE DRAWER BACKDROP */}
       {mobileMenuOpen && (
-        <div
-          className="mobile-drawer-overlay"
-          onClick={() => setMobileMenuOpen(false)}
-        />
+        <div className="mobile-drawer-overlay" onClick={() => setMobileMenuOpen(false)} />
       )}
 
-      {/* MOBILE DRAWER (SIDEBAR) – includes profile links */}
+      {/* MOBILE DRAWER */}
       {mobileMenuOpen && (
         <div className="mobile-drawer-welcome">
           {navItems.map((item) => (
@@ -155,20 +148,10 @@ const Navbar = () => {
             </button>
           ))}
           <div className="drawer-divider"></div>
-          <button
-            onClick={() => {
-              navigate("/settings");
-              setMobileMenuOpen(false);
-            }}
-          >
+          <button onClick={() => { navigate("/settings"); setMobileMenuOpen(false); }}>
             ⚙️ Settings
           </button>
-          <button
-            onClick={() => {
-              navigate("/reports");
-              setMobileMenuOpen(false);
-            }}
-          >
+          <button onClick={() => { navigate("/reports"); setMobileMenuOpen(false); }}>
             📑 Reports
           </button>
           <button onClick={handleLogout}>🚪 Logout</button>
