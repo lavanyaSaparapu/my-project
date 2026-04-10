@@ -3,9 +3,8 @@
   position: relative;
   min-height: 100vh;
   background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
-  padding: 2rem;
+  padding: 80px 2rem 2rem 2rem;  /* top padding increased to avoid navbar overlap */
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  padding-top: 100px;
 }
 
 /* Animated blobs */
@@ -277,7 +276,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .learning-container {
-    padding: 1rem;
+    padding: 70px 1rem 1rem 1rem;  /* adjusted top padding for mobile */
   }
   .learning-header {
     flex-direction: column;
