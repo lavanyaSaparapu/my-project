@@ -19,6 +19,7 @@ import ProgressTracking from "./pages/ProgressTracking";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import Notifications from "./pages/Notifications";
+import Practice from "./pages/Practice";
 
 // Layout
 import Navbar from "./components/Navbar";
@@ -99,7 +100,7 @@ function App() {
           <Route path="/reports" element={<DashboardRoute element={<Reports />} />} />
           <Route path="/settings" element={<DashboardRoute element={<Settings />} />} />
           <Route path="/notifications" element={<DashboardRoute element={<Notifications />} />} />
-
+          <Route path="/practice" element={<DashboardRoute element={<Practice />} />} />
           {/* 404 Page */}
           <Route path="*" element={<div style={{ textAlign: "center", marginTop: "100px" }}><h1>404</h1><p>Page not found</p><a href="/">Go home</a></div>} />
         </Routes>

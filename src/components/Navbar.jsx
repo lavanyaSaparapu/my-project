@@ -19,6 +19,7 @@ const Navbar = () => {
     { path: "/dashboard", label: "Dashboard", icon: "🏠" },
     { path: "/learning-path", label: "Learning Path", icon: "🗺️" },
     { path: "/progress-tracking", label: "Progress", icon: "📶" },
+    { path: "/practice", label: "Practice", icon: "🎯" },
   ];
 
   // Scroll effect
