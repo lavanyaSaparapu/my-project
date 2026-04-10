@@ -5,6 +5,7 @@
   background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
   padding: 80px 2rem 2rem 2rem;  /* top padding increased to avoid navbar overlap */
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin-top: 80px;
 }
 
 /* Animated blobs */
