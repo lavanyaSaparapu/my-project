@@ -1,3 +1,5 @@
+/* App.css (or wherever your global CSS is) */
+
 /* ==================== GLOBAL RESET ==================== */
 * {
   margin: 0;
@@ -502,38 +504,103 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== RESPONSIVE (FIXED: stats hidden on 1024px and below) ========== */
 @media (max-width: 1024px) {
-  .hero-text-enhanced h1 { font-size: 2.5rem; }
-  .hero-stats { gap: 20px; }
-  .welcome-card-enhanced { width: 380px; padding: 35px 30px; }
-  .brand-name { font-size: 1.4rem; }
+  /* Hide stats completely on tablets and smaller devices */
+  .hero-stats {
+    display: none;
+  }
+
+  /* Keep other responsive adjustments */
+  .hero-text-enhanced h1 {
+    font-size: 2.5rem;
+  }
+  .welcome-card-enhanced {
+    width: 380px;
+    padding: 35px 30px;
+  }
+  .brand-name {
+    font-size: 1.4rem;
+  }
 }
+
 @media (max-width: 900px) {
-  .welcome-container-enhanced { flex-direction: column; }
-  .left-panel-enhanced { width: 100%; height: 50%; padding: 40px; }
-  .right-panel-enhanced { width: 100%; height: 50%; }
-  .hero-text-enhanced h1 { font-size: 2rem; }
-  .hero-stats { display: none; }
-  .scroll-indicator { display: none; }
-  .welcome-card-enhanced { width: 90%; padding: 30px 25px; }
-  .feature-list { display: none; }
-  .welcome-card-enhanced .particle { display: none; }
+  .welcome-container-enhanced {
+    flex-direction: column;
+  }
+  .left-panel-enhanced {
+    width: 100%;
+    height: 50%;
+    padding: 40px;
+  }
+  .right-panel-enhanced {
+    width: 100%;
+    height: 50%;
+  }
+  .hero-text-enhanced h1 {
+    font-size: 2rem;
+  }
+  .scroll-indicator {
+    display: none;
+  }
+  .welcome-card-enhanced {
+    width: 90%;
+    padding: 30px 25px;
+  }
+  .feature-list {
+    display: none;
+  }
+  .welcome-card-enhanced .particle {
+    display: none;
+  }
 }
+
 @media (max-width: 768px) {
-  .left-panel-enhanced { padding: 30px; }
-  .hero-text-enhanced h1 { font-size: 1.8rem; }
-  .hero-text-enhanced p { font-size: 0.95rem; }
-  .brand-name { font-size: 1.2rem; }
-  .logo-enhanced { width: 40px; height: 40px; }
-  .logo-svg { width: 22px; height: 22px; }
+  .left-panel-enhanced {
+    padding: 30px;
+  }
+  .hero-text-enhanced h1 {
+    font-size: 1.8rem;
+  }
+  .hero-text-enhanced p {
+    font-size: 0.95rem;
+  }
+  .brand-name {
+    font-size: 1.2rem;
+  }
+  .logo-enhanced {
+    width: 40px;
+    height: 40px;
+  }
+  .logo-svg {
+    width: 22px;
+    height: 22px;
+  }
 }
+
 @media (max-width: 550px) {
-  .left-panel-enhanced { padding: 20px; }
-  .hero-text-enhanced h1 { font-size: 1.5rem; }
-  .hero-badge { font-size: 0.7rem; padding: 4px 12px; }
-  .welcome-card-enhanced { padding: 25px 20px; }
-  .welcome-card-enhanced h2 { font-size: 1.5rem; }
-  .welcome-card-enhanced .card-icon { width: 50px; height: 50px; }
-  .welcome-card-enhanced .card-icon svg { width: 25px; height: 25px; }
+  .left-panel-enhanced {
+    padding: 20px;
+  }
+  .hero-text-enhanced h1 {
+    font-size: 1.5rem;
+  }
+  .hero-badge {
+    font-size: 0.7rem;
+    padding: 4px 12px;
+  }
+  .welcome-card-enhanced {
+    padding: 25px 20px;
+  }
+  .welcome-card-enhanced h2 {
+    font-size: 1.5rem;
+  }
+  .welcome-card-enhanced .card-icon {
+    width: 50px;
+    height: 50px;
+  }
+  .welcome-card-enhanced .card-icon svg {
+    width: 25px;
+    height: 25px;
+  }
 }
