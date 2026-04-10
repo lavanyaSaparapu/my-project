@@ -14,7 +14,7 @@ const Navbar = () => {
 
   const userMenuRef = useRef(null);
 
-  // Nav items – Practice is now clearly included
+ 
   const navItems = [
     { path: "/dashboard", label: "Dashboard", icon: "🏠" },
     { path: "/learning-path", label: "Learning Path", icon: "🗺️" },
@@ -22,14 +22,13 @@ const Navbar = () => {
     { path: "/practice", label: "Practice", icon: "🎯" },  
   ];
 
-  // Scroll effect
+  
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
@@ -40,7 +39,7 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Lock body scroll when mobile drawer is open
+  
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.classList.add("drawer-open");
@@ -50,7 +49,7 @@ const Navbar = () => {
     return () => document.body.classList.remove("drawer-open");
   }, [mobileMenuOpen]);
 
-  // Logout
+  
   const handleLogout = async () => {
     await signOut(auth);
     localStorage.removeItem("token");
@@ -82,7 +81,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          {/* DESKTOP NAVIGATION LINKS - all 4 items visible */}
+          
           <div className="nav-links-welcome">
             {navItems.map((item) => (
               <button
@@ -96,7 +95,7 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* RIGHT SIDE ACTIONS */}
+         
           <div className="nav-actions-welcome">
             <div className="user-menu-welcome" ref={userMenuRef}>
               <button

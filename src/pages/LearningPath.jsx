@@ -1,224 +1,265 @@
-// LearningPage.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSkillContext } from "../context/SkillContext";
-import ReactMarkdown from "react-markdown";
-import "./LearningPage.css";
+import "./LearningPath.css";
 
-// ========== DYNAMIC FALLBACK PLAN (uses actual user data) ==========
-const generateFallbackPlan = (selectedRole, matchScore, prioritySkills, userSkills, requiredSkills) => {
-  const topSkill = prioritySkills[0] || "core skill";
-  const secondSkill = prioritySkills[1] || "another key skill";
-  const thirdSkill = prioritySkills[2] || "supporting skill";
+const copyToClipboard = (text) => {
+  navigator.clipboard.writeText(text);
+  alert("✅ Learning plan copied to clipboard!");
+};
 
-  return `
-### 🎯 Goal
-Your goal is to raise your **${selectedRole}** match from ${matchScore}% to 85%+ by focusing on **${topSkill}** (currently ${userSkills[topSkill] || 0}% vs ${requiredSkills[topSkill] || 80}% required) and **${secondSkill}** (${userSkills[secondSkill] || 0}% vs ${requiredSkills[secondSkill] || 75}%). Complete the 5‑day project below.
+const generateStructuredFallback = (selectedRole, matchScore, prioritySkills, userSkills, requiredSkills) => {
+  const skills = prioritySkills.length ? prioritySkills : ["Core Skill", "Secondary Skill", "Supporting Skill"];
+  const [skill1, skill2, skill3] = skills;
 
-### 🔥 Priority Skills to Learn
-**${topSkill}**  
-- *Why it matters*: Used in 80% of ${selectedRole} job tasks (e.g., building UI components, state management).  
-- *What to focus on*: Core syntax, hooks/patterns, error handling, and debugging.  
-- *Real‑world usage*: Create a dynamic dashboard, a form with validation, or a real‑time filter.
+  const prioritySkillsDetails = skills.map((skill) => ({
+    name: skill,
+    whyMatters: `Mastering ${skill} is key to performing well in ${selectedRole} role.`,
+    whatToFocus: "Core concepts, best practices, and hands-on coding.",
+    realWorldUsage: `Apply ${skill} in a real project scenario (e.g., build a feature, integrate an API, or optimize a workflow).`,
+  }));
 
-**${secondSkill}**  
-- *Why it matters*: Essential for data fetching, API integration, or backend logic.  
-- *What to focus on*: Async/await, promises, HTTP requests, and error boundaries.  
-- *Real‑world usage*: Build a weather app, a search autocomplete, or a comment system.
+  const dailyPlan = [
+    { day: 1, topic: skill1, task: `Study ${skill1} fundamentals and build a small feature using it.`, practice: `Solve 3 coding exercises on ${skill1}.` },
+    { day: 2, topic: skill2, task: `Study ${skill2} fundamentals and build a small feature using it.`, practice: `Solve 3 coding exercises on ${skill2}.` },
+    { day: 3, topic: skill3, task: `Study ${skill3} fundamentals and build a small feature using it.`, practice: `Solve 3 coding exercises on ${skill3}.` },
+    { day: 4, topic: skill1, task: `Deepen ${skill1} knowledge – build a reusable component/module.`, practice: `Solve 3 advanced exercises on ${skill1}.` },
+    { day: 5, topic: skill2, task: `Integrate ${skill2} with a real API or database.`, practice: `Solve 3 integration exercises on ${skill2}.` },
+  ];
 
-**${thirdSkill}**  
-- *Why it matters*: Improves code maintainability and team collaboration.  
-- *What to focus on*: Code organization, testing basics, and version control (Git).  
-- *Real‑world usage*: Refactor a messy function, write a unit test, or commit a feature branch.
+  const miniProject = `Build a small application that heavily uses ${skill1} and ${skill2} to solve a problem you care about (e.g., a dashboard, a skill tracker, or a data visualizer).`;
+  const realWorldChallenge = `Take an existing project (e.g., your portfolio) and refactor it to use ${skill1} or ${skill2}. For example, convert a static page into a component‑based app with state.`;
 
-### 📅 Daily Learning Plan (5 distinct days)
-- **Day 1 (Environment & Basics)**: Set up a new project, write 5 small functions using ${topSkill}, and run them locally.  
-- **Day 2 (Component / Module)**: Build a reusable ${topSkill} component (e.g., a card, button, or input group) with props.  
-- **Day 3 (Data Integration)**: Fetch data from a public API using ${secondSkill} and display it inside your component.  
-- **Day 4 (Refactor & Test)**: Add error handling, loading states, and one unit test for your component.  
-- **Day 5 (Project Finish)**: Combine everything into a mini‑portfolio piece – deploy it on Vercel/Netlify.
+  let resources = {
+    courses: ["freeCodeCamp – Responsive Web Design", "Udemy – The Complete JavaScript Course", "Frontend Masters – React Deep Dive"],
+    docs: ["MDN Web Docs (JavaScript)", "React Official Docs", "Node.js Guides"],
+    practice: ["LeetCode (for problem solving)", "Frontend Mentor", "Exercism (language tracks)"],
+  };
+  if (selectedRole.toLowerCase().includes("data")) {
+    resources = {
+      courses: ["DataCamp – Data Scientist with Python", "Coursera – Applied Data Science", "Kaggle Learn – Pandas & SQL"],
+      docs: ["Pandas Documentation", "Scikit‑learn User Guide", "TensorFlow Official Tutorials"],
+      practice: ["Kaggle Competitions", "LeetCode Database", "HackerRank Python"],
+    };
+  }
 
-### 🛠️ Hands‑on Practice
-**Mini Project**: Create a "Skill Gap Tracker" that lists ${prioritySkills.join(", ")}. Allow users to rate their own levels, compare to required levels, and show a progress bar. Use ${topSkill} for the UI and ${secondSkill} for saving data (localStorage or mock API).  
-**Real‑world Challenge**: Find an open issue labeled "good first issue" on a GitHub repo that uses ${topSkill}. Try to reproduce the bug or implement the feature locally.
+  const proTips = [
+    "Build, don't just watch – Spend 70% of your time coding.",
+    "Explain aloud – Teach what you learn to a rubber duck or a friend.",
+    "Use AI assistants wisely – Ask for explanations, not just solutions.",
+    "Avoid context switching – Focus on one priority skill for 2-3 days.",
+    "Track your progress – Re-visit the dashboard sliders and see your match score increase.",
+  ];
 
-### 📚 Recommended Resources
-- **Course**: "The Complete ${topSkill} Course" on Udemy (or free equivalent on YouTube: "${topSkill} Tutorial for Beginners").  
-- **Docs**: Official ${topSkill} documentation – focus on the "Getting Started" and "Advanced Concepts" sections.  
-- **Practice**: LeetCode's ${topSkill} track + Frontend Mentor (real‑world design challenges).
-
-### 🚀 Pro Tips
-- **Code daily** – Even 30 minutes > 5 hours on weekends. Consistency builds muscle memory.  
-- **Explain out loud** – Teach your solution to a rubber duck or record a voice memo.  
-- **Limit AI copy‑paste** – Use AI to explain errors, not to write entire functions.  
-- **Review before new** – Spend 5 minutes reviewing yesterday's code before starting today's task.
-`;
+  return {
+    goal: `Your goal is to close the skill gaps for ${selectedRole}. Currently you match ${matchScore}% of the requirements. By mastering the priority skills below, you can reach 85%+ match and significantly improve your hireability. Focus on hands-on projects rather than passive learning.`,
+    prioritySkillsDetails,
+    dailyPlan,
+    miniProject,
+    realWorldChallenge,
+    resources,
+    proTips,
+  };
 };
 
 export default function LearningPage() {
   const { selectedRole, rolesWithMetrics, userSkills } = useSkillContext();
-  const [loading, setLoading] = useState(false);
-  const [plan, setPlan] = useState("");
+  const [planData, setPlanData] = useState(null);
+  const planRef = useRef(null);
 
   const roleData = rolesWithMetrics.find(r => r.name === selectedRole);
   const matchScore = roleData?.matchScore || 0;
   const prioritySkills = roleData?.prioritySkills || [];
   const requiredSkills = roleData?.requiredSkills || {};
 
-  const generatePlan = async () => {
-    if (!roleData) return;
-    setLoading(true);
-
-    // Build a clear prompt that forces unique content per section
-    const prompt = `
-You are an expert career mentor. Generate a personalized learning plan for:
-
-Target Role: ${selectedRole}
-Match Score: ${matchScore}%
-Current Skills: ${JSON.stringify(userSkills)}
-Required Skills: ${JSON.stringify(requiredSkills)}
-Priority Skills: ${prioritySkills.join(", ")}
-
-STRICT RULES:
-1. Each section (🎯 Goal, 🔥 Priority Skills, 📅 Daily Plan, 🛠️ Hands-on Practice, 📚 Resources, 🚀 Pro Tips) must contain COMPLETELY DIFFERENT content. No repeating advice, examples, or project ideas across sections.
-2. Daily Plan: exactly 5 days, each day a distinct task (no repetition). Use Day 1, Day 2, etc.
-3. Priority Skills: For each skill, write "Why it matters", "What to focus on", "Real-world usage" – these must be specific to ${selectedRole}.
-4. Hands-on Practice: The mini project must combine at least 2 priority skills. The real-world challenge must be different from the mini project.
-5. Resources: Recommend one specific course, one official doc, and one practice platform – all relevant to the priority skills.
-6. Pro Tips: 4 actionable tips that are NOT about "coding daily" or "taking breaks" (be creative).
-
-Output format (exact markdown):
-
-#### 🎯 Goal
-(one paragraph only)
-
-#### 🔥 Priority Skills to Learn
-**Skill Name**  
-- Why it matters  
-- What to focus on  
-- Real-world usage
-
-(Repeat for each priority skill)
-
-#### 📅 Daily Learning Plan (5 days)
-**Day 1:** (unique activity)  
-**Day 2:** (different activity)  
-**Day 3:** (different)  
-**Day 4:** (different)  
-**Day 5:** (different)
-
-#### 🛠️ Hands-on Practice
-**Mini Project:** (description)  
-**Real-world Challenge:** (description)
-
-#### 📚 Resources
-**Course:** (name and platform)  
-**Docs:** (official docs name)  
-**Practice:** (platform name)
-
-#### 🚀 Pro Tips
-- (tip 1)  
-- (tip 2)  
-- (tip 3)  
-- (tip 4)
-`;
-
-    try {
-      const res = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: [{ role: "user", content: prompt }],
-          temperature: 0.8, // Slightly higher for more variety
-        }),
-      });
-
-      if (!res.ok) throw new Error("API request failed");
-      const data = await res.json();
-      const content = data.choices?.[0]?.message?.content;
-      if (content) {
-        setPlan(content);
-      } else {
-        throw new Error("Empty response");
-      }
-    } catch (err) {
-      console.error(err);
-      // Use dynamic fallback with actual data
-      const fallback = generateFallbackPlan(selectedRole, matchScore, prioritySkills, userSkills, requiredSkills);
-      setPlan(fallback);
-    }
-
-    setLoading(false);
-  };
-
+  // Generate plan immediately from fallback (no API call)
   useEffect(() => {
-    generatePlan();
-  }, [selectedRole]);
-
-  if (!roleData) {
-    return (
+  if (roleData && !planData) {
+    const fallbackPlan = generateStructuredFallback(
+      selectedRole,
+      matchScore,
+      prioritySkills,
+      userSkills,
+      requiredSkills
+    );
+    setPlanData(fallbackPlan);
+  }
+}, [roleData, planData, selectedRole, matchScore, prioritySkills, userSkills, requiredSkills]);
+    if(!planData){
+      return(
+    
       <div className="learning-container">
         <div className="loading-state">Loading role data...</div>
       </div>
     );
   }
 
+  const DonutChart = ({ score }) => {
+    const radius = 40;
+    const circumference = 2 * Math.PI * radius;
+    const offset = circumference - (score / 100) * circumference;
+    return (
+      <div className="donut-wrapper">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r={radius} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="8" />
+          <circle
+            cx="50"
+            cy="50"
+            r={radius}
+            fill="none"
+            stroke="url(#gradient)"
+            strokeWidth="8"
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+            strokeLinecap="round"
+            transform="rotate(-90 50 50)"
+          />
+          <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#818cf8" />
+              <stop offset="100%" stopColor="#c084fc" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span className="donut-score">{score}%</span>
+      </div>
+    );
+  };
+
+  const copyPlanText = () => {
+    let text = `🎯 Goal\n${planData.goal}\n\n🔥 Priority Skills to Learn\n`;
+    planData.prioritySkillsDetails.forEach(s => {
+      text += `\n**${s.name}**\n- Why it matters: ${s.whyMatters}\n- What to focus on: ${s.whatToFocus}\n- Real-world usage: ${s.realWorldUsage}\n`;
+    });
+    text += `\n📅 Daily Learning Plan\n`;
+    planData.dailyPlan.forEach(d => {
+      text += `Day ${d.day}: ${d.topic}\n   Task: ${d.task}\n   Practice: ${d.practice}\n`;
+    });
+    text += `\n🛠️ Hands-on Practice\nMini Project: ${planData.miniProject}\nReal-world Challenge: ${planData.realWorldChallenge}\n`;
+    text += `\n📚 Recommended Resources\nCourses: ${planData.resources.courses.join(", ")}\nDocs: ${planData.resources.docs.join(", ")}\nPractice: ${planData.resources.practice.join(", ")}\n`;
+    text += `\n🚀 Pro Tips\n${planData.proTips.map(t => `- ${t}`).join("\n")}`;
+    copyToClipboard(text);
+  };
+
   return (
     <div className="learning-container">
       <div className="blob blob-1"></div>
       <div className="blob blob-2"></div>
+      <div className="blob blob-3"></div>
+
+      <div className="learning-tabs">
+        <span className="tab">Dashboard</span>
+        <span className="tab active">Learning Path</span>
+        <span className="tab">Progress</span>
+      </div>
 
       <div className="learning-header">
         <div className="title-section">
           <span className="header-icon">🧠</span>
-          <h2 className="learning-title">AI Learning Path</h2>
+          <h2 className="learning-title">Personalized Learning Plan</h2>
         </div>
-        <div className="role-chip">
-          🎯 {selectedRole} • <strong>{matchScore}%</strong> match
+        <div className="header-stats">
+          <div className="role-chip">🎯 {selectedRole}</div>
+          <DonutChart score={matchScore} />
         </div>
       </div>
 
-      <button className="generate-btn" onClick={generatePlan} disabled={loading}>
-        {loading ? (
-          <>
-            <span className="spinner"></span> Generating...
-          </>
-        ) : (
-          <>🔄 Regenerate Plan</>
-        )}
-      </button>
+      <div className="action-bar">
+        <button className="copy-btn-enhanced" onClick={copyPlanText}>
+          📋 Copy Full Plan
+        </button>
+      </div>
 
-      <div className="plan-card">
-        {loading ? (
-          <div className="skeleton-loader">
-            <div className="skeleton-line"></div>
-            <div className="skeleton-line"></div>
-            <div className="skeleton-line short"></div>
-            <div className="skeleton-line"></div>
+      <div className="plan-content" ref={planRef}>
+        <div className="card-section goal-card">
+          <h3 className="section-title">🎯 Goal</h3>
+          <p className="goal-text">{planData.goal}</p>
+        </div>
+
+        <div className="card-section skills-section">
+          <h3 className="section-title">🔥 Priority Skills to Learn</h3>
+          <div className="skills-grid">
+            {planData.prioritySkillsDetails.map((skill, idx) => (
+              <div className="skill-card" key={idx}>
+                <h4 className="skill-name">{skill.name}</h4>
+                <div className="skill-detail">
+                  <span className="detail-label">Why it matters</span>
+                  <p>{skill.whyMatters}</p>
+                </div>
+                <div className="skill-detail">
+                  <span className="detail-label">What to focus on</span>
+                  <p>{skill.whatToFocus}</p>
+                </div>
+                <div className="skill-detail">
+                  <span className="detail-label">Real-world usage</span>
+                  <p>{skill.realWorldUsage}</p>
+                </div>
+              </div>
+            ))}
           </div>
-        ) : (
-          <ReactMarkdown
-            components={{
-              h3: ({ node, ...props }) => <h3 className="plan-h3" {...props} />,
-              h4: ({ node, ...props }) => <h4 className="plan-h4" {...props} />,
-              p: ({ node, ...props }) => <p className="plan-p" {...props} />,
-              ul: ({ node, ...props }) => <ul className="plan-ul" {...props} />,
-              li: ({ node, ...props }) => <li className="plan-li" {...props} />,
-              a: ({ node, ...props }) => <a className="plan-link" target="_blank" rel="noopener noreferrer" {...props} />,
-              strong: ({ node, ...props }) => <strong className="plan-strong" {...props} />,
-            }}
-          >
-            {plan}
-          </ReactMarkdown>
-        )}
+        </div>
+
+        <div className="card-section daily-section">
+          <h3 className="section-title">📅 Daily Learning Plan (5 days)</h3>
+          <div className="daily-grid">
+            {planData.dailyPlan.map((day) => (
+              <div className="daily-card" key={day.day}>
+                <div className="day-number">Day {day.day}</div>
+                <div className="day-topic">📌 {day.topic}</div>
+                <div className="day-task">✅ Task: {day.task}</div>
+                <div className="day-practice">✍️ Practice: {day.practice}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="card-section hands-on-section">
+          <h3 className="section-title">🛠️ Hands-on Practice</h3>
+          <div className="practice-grid">
+            <div className="practice-card">
+              <h4>📁 Mini Project</h4>
+              <p>{planData.miniProject}</p>
+            </div>
+            <div className="practice-card">
+              <h4>🌍 Real-world Challenge</h4>
+              <p>{planData.realWorldChallenge}</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="card-section resources-section">
+          <h3 className="section-title">📚 Recommended Resources</h3>
+          <div className="resources-grid">
+            <div className="resource-card">
+              <h4>📘 Courses</h4>
+              <ul>
+                {planData.resources.courses.map((c, i) => <li key={i}>{c}</li>)}
+              </ul>
+            </div>
+            <div className="resource-card">
+              <h4>📖 Documentation</h4>
+              <ul>
+                {planData.resources.docs.map((d, i) => <li key={i}>{d}</li>)}
+              </ul>
+            </div>
+            <div className="resource-card">
+              <h4>💻 Practice Platforms</h4>
+              <ul>
+                {planData.resources.practice.map((p, i) => <li key={i}>{p}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="card-section protips-section">
+          <h3 className="section-title">🚀 Pro Tips</h3>
+          <ul className="protips-list">
+            {planData.proTips.map((tip, i) => <li key={i}>{tip}</li>)}
+          </ul>
+        </div>
       </div>
 
       <div className="learning-footer">
-        💡 Tip: Adjust your skill sliders on the Dashboard, then regenerate for updated recommendations.
+        💡 Tip: Adjust your skill sliders on the Dashboard to see updated recommendations.
       </div>
     </div>
-  );
-}
+  )};
