@@ -1,127 +1,221 @@
+// src/components/LearningPath.jsx
 import { useState, useEffect } from "react";
 import { useSkillContext } from "../context/SkillContext";
 import "./LearningPath.css";
 
-// Resource map (unchanged, each skill has 3-4 resources)
+// ------------------------------------------------------------------
+// Helper: difficulty, time estimate, job demand, impact, daily task
+// ------------------------------------------------------------------
+const skillMetadata = {
+  React: {
+    difficulty: "Medium",
+    timeDays: "2–3 days",
+    jobDemand: 85,
+    impact: 12,
+    dailyTask: "✔ Build a reusable component",
+  },
+  TypeScript: {
+    difficulty: "Medium",
+    timeDays: "2–3 days",
+    jobDemand: 70,
+    impact: 10,
+    dailyTask: "✔ Convert a JS component to TypeScript",
+  },
+  JavaScript: {
+    difficulty: "Medium",
+    timeDays: "2–3 days",
+    jobDemand: 90,
+    impact: 15,
+    dailyTask: "✔ Solve 3 array/object manipulation challenges",
+  },
+  "Node.js": {
+    difficulty: "Medium",
+    timeDays: "3–4 days",
+    jobDemand: 75,
+    impact: 10,
+    dailyTask: "✔ Create a simple REST API endpoint",
+  },
+  Python: {
+    difficulty: "Easy",
+    timeDays: "2–3 days",
+    jobDemand: 80,
+    impact: 8,
+    dailyTask: "✔ Write a function that processes a CSV file",
+  },
+  Docker: {
+    difficulty: "Hard",
+    timeDays: "3–4 days",
+    jobDemand: 60,
+    impact: 12,
+    dailyTask: "✔ Dockerize a Node.js app",
+  },
+  Kubernetes: {
+    difficulty: "Hard",
+    timeDays: "4–5 days",
+    jobDemand: 55,
+    impact: 15,
+    dailyTask: "✔ Deploy a microservice on minikube",
+  },
+  AWS: {
+    difficulty: "Hard",
+    timeDays: "4–5 days",
+    jobDemand: 70,
+    impact: 14,
+    dailyTask: "✔ Create an S3 bucket and host a static site",
+  },
+  SQL: {
+    difficulty: "Easy",
+    timeDays: "2–3 days",
+    jobDemand: 85,
+    impact: 10,
+    dailyTask: "✔ Write a JOIN query with aggregation",
+  },
+  Git: {
+    difficulty: "Easy",
+    timeDays: "1–2 days",
+    jobDemand: 95,
+    impact: 8,
+    dailyTask: "✔ Practice branching & merging",
+  },
+  // Add more skills as needed
+};
+
+const defaultMeta = {
+  difficulty: "Medium",
+  timeDays: "2–3 days",
+  jobDemand: 65,
+  impact: 8,
+  dailyTask: "✔ Complete one learning module",
+};
+
+function getSkillMeta(skillName) {
+  return skillMetadata[skillName] || defaultMeta;
+}
+
+// ------------------------------------------------------------------
+// Resource suggestions
+// ------------------------------------------------------------------
 const resourceMap = {
   TypeScript: [
     "📘 TypeScript Handbook (official docs)",
     "🎓 Udemy: 'Understanding TypeScript' by Maximilian",
     "🛠️ Project: Build a type-safe React app with TS",
-    "📝 Convert a JavaScript project to TypeScript"
+    "📝 Convert a JavaScript project to TypeScript",
   ],
   Testing: [
     "🧪 Jest + React Testing Library tutorial (TestingJavaScript.com)",
     "🎓 Course: 'Testing React with Jest & RTL' (Udemy)",
     "🛠️ Project: Write unit/integration tests for a to-do app",
-    "🔍 End‑to‑end testing with Cypress"
+    "🔍 End‑to‑end testing with Cypress",
   ],
   Performance: [
     "⚡ Web.dev Learn Performance (free course)",
     "🎓 Coursera: 'Website Performance Optimization'",
     "🛠️ Project: Audit & optimize a live site using Lighthouse",
-    "📉 Lazy loading, code splitting, and image optimization"
+    "📉 Lazy loading, code splitting, and image optimization",
   ],
   Docker: [
     "🐳 Docker Curriculum (free, interactive)",
     "🎓 Udemy: 'Docker Mastery' by Bret Fisher",
     "🛠️ Project: Containerize a Node.js + MongoDB app",
-    "🐙 Multi-container apps with Docker Compose"
+    "🐙 Multi-container apps with Docker Compose",
   ],
   Kubernetes: [
     "☸️ K8s Official Tutorial (interactive)",
     "🎓 Coursera: 'Introduction to Kubernetes'",
     "🛠️ Project: Deploy a microservices app on minikube",
-    "🔧 Helm charts & CI/CD with Kubernetes"
+    "🔧 Helm charts & CI/CD with Kubernetes",
   ],
   AWS: [
     "☁️ AWS Skill Builder (free digital training)",
     "🎓 Udemy: 'Ultimate AWS Certified Solutions Architect'",
     "🛠️ Project: Serverless website (S3 + Lambda + API Gateway)",
-    "🏗️ Deploy a VPC with EC2 and RDS"
+    "🏗️ Deploy a VPC with EC2 and RDS",
   ],
   Python: [
     "🐍 Python Crash Course (book / exercises)",
     "🎓 Coursera: 'Python for Everybody'",
     "🛠️ Project: Build a data analysis script with pandas",
-    "🤖 Create a simple web scraper or API wrapper"
+    "🤖 Create a simple web scraper or API wrapper",
   ],
   ML: [
     "🤖 Andrew Ng's ML Course (Coursera)",
     "🎓 Fast.ai 'Practical Deep Learning'",
     "🛠️ Kaggle competition: Titanic or House Prices",
-    "📊 Build a recommendation system"
+    "📊 Build a recommendation system",
   ],
   React: [
     "⚛️ React Official Docs (beta.reactjs.org)",
     "🎓 Scrimba: 'Learn React for Free'",
     "🛠️ Project: E‑commerce frontend with cart & filters",
-    "🏗️ Build a dashboard with React Router & Context"
+    "🏗️ Build a dashboard with React Router & Context",
   ],
   "Node.js": [
     "🟢 Node.js Design Patterns (book)",
     "🎓 Udemy: 'Node.js Advanced Concepts'",
     "🛠️ Project: REST API with Express + JWT auth",
-    "📡 Real‑time chat app with Socket.io"
+    "📡 Real‑time chat app with Socket.io",
   ],
   Security: [
     "🔒 OWASP Top 10 (read & understand each)",
     "🎓 TryHackMe: 'Web Hacking' room",
     "🛠️ Project: Capture The Flag (CTF) challenges",
-    "🛡️ Implement auth & input sanitization in a sample app"
+    "🛡️ Implement auth & input sanitization in a sample app",
   ],
   JavaScript: [
     "📜 'You Don't Know JS' (book series)",
     "🎓 FreeCodeCamp: 'JavaScript Algorithms & Data Structures'",
     "🛠️ Project: Build an interactive quiz app",
-    "🧩 Solve 10 LeetCode problems using JS"
+    "🧩 Solve 10 LeetCode problems using JS",
   ],
   CSS: [
     "🎨 CSS Tricks (complete guide to Flexbox/Grid)",
     "🎓 Kevin Powell's free CSS course (YouTube)",
     "🛠️ Project: Clone a modern website layout",
-    "📱 Build a fully responsive portfolio"
+    "📱 Build a fully responsive portfolio",
   ],
   HTML: [
     "🌐 MDN Web Docs (HTML elements guide)",
     "🎓 W3Schools HTML tutorial",
     "🛠️ Project: Build a semantic HTML resume",
-    "📄 Create a multi‑page static site"
+    "📄 Create a multi‑page static site",
   ],
   SQL: [
     "🗄️ SQLZoo (interactive exercises)",
     "🎓 Mode Analytics SQL Tutorial",
     "🛠️ Project: Design a database for an e‑commerce store",
-    "📊 Write complex JOINs & aggregations on a sample DB"
+    "📊 Write complex JOINs & aggregations on a sample DB",
   ],
   Git: [
     "🔀 GitHub Skills (interactive courses)",
     "🎓 Atlassian Git Tutorials",
     "🛠️ Project: Contribute to an open‑source repo",
-    "🌿 Practice branching & merging with a team simulation"
+    "🌿 Practice branching & merging with a team simulation",
   ],
   Agile: [
     "📋 Scrum Guide (official)",
     "🎓 Coursera: 'Agile with Atlassian Jira'",
     "🛠️ Project: Run a mock sprint with a team (or solo)",
-    "📈 Create user stories & velocity chart"
+    "📈 Create user stories & velocity chart",
   ],
   "Problem Solving": [
     "🧩 LeetCode (Easy/Medium problems)",
     "🎓 HackerRank 'Problem Solving' track",
     "🛠️ Project: Solve 10 algorithm challenges in your language",
-    "📘 Read 'Cracking the Coding Interview'"
-  ]
+    "📘 Read 'Cracking the Coding Interview'",
+  ],
 };
 
 const getResourceSuggestions = (skillName) => [
   `💡 Build a project using ${skillName} (search YouTube for tutorials)`,
   `📚 Take a course on ${skillName} (Coursera/Udemy)`,
   `📖 Read the official documentation for ${skillName}`,
-  `🛠️ Practice ${skillName} on a coding platform (Codecademy/FreeCodeCamp)`
+  `🛠️ Practice ${skillName} on a coding platform (Codecademy/FreeCodeCamp)`,
 ];
 
+// ------------------------------------------------------------------
 // Confetti component (unchanged)
+// ------------------------------------------------------------------
 const Confetti = () => {
   useEffect(() => {
     const canvas = document.createElement("canvas");
@@ -159,7 +253,7 @@ const Confetti = () => {
       if (!canvas.parentNode) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       let active = false;
-      particles.forEach(p => {
+      particles.forEach((p) => {
         p.y += p.speedY;
         p.x += p.speedX;
         if (p.y < canvas.height) active = true;
@@ -183,6 +277,9 @@ const Confetti = () => {
   return null;
 };
 
+// ------------------------------------------------------------------
+// Main Component
+// ------------------------------------------------------------------
 export default function LearningPath() {
   const { bestMatchRole, userSkills, rolesWithMetrics } = useSkillContext();
   const [completed, setCompleted] = useState([]);
@@ -190,15 +287,25 @@ export default function LearningPath() {
   const [xpPopup, setXpPopup] = useState(null);
   const [showConfetti, setShowConfetti] = useState(false);
 
-  const role = bestMatchRole || rolesWithMetrics[0];
+  const role = bestMatchRole || rolesWithMetrics?.[0];
   const prioritySkills = role?.prioritySkills || [];
 
-  const steps = prioritySkills.slice(0, 5).map((skill, idx) => ({
-    id: idx,
-    title: `Master ${skill}`,
-    xp: Math.floor((100 - (userSkills[skill] || 0)) / 2) + 20,
-    skillName: skill,
-  }));
+  const TARGET_PERCENT = 80;
+
+  const steps = prioritySkills.slice(0, 5).map((skill, idx) => {
+    const current = Math.min(100, userSkills[skill] || 0);
+    const gap = Math.max(0, TARGET_PERCENT - current);
+    const xp = gap > 0 ? Math.floor(gap / 2) + 20 : 10;
+    return {
+      id: idx,
+      skillName: skill,
+      currentProficiency: current,
+      target: TARGET_PERCENT,
+      gap: current - TARGET_PERCENT,
+      xp,
+      meta: getSkillMeta(skill),
+    };
+  });
 
   // Load progress from localStorage
   useEffect(() => {
@@ -208,30 +315,41 @@ export default function LearningPath() {
     else setCompleted([]);
   }, [role]);
 
-  // Save progress to localStorage
+  // Save progress
   useEffect(() => {
     if (role)
       localStorage.setItem(`learning_${role.name}`, JSON.stringify(completed));
   }, [completed, role]);
 
-  // Toggle complete with linear unlock logic
+  // Re-check completion when userSkills change (real-time)
+  useEffect(() => {
+    if (!role) return;
+    const stillValid = completed.filter((idx) => {
+      const step = steps[idx];
+      return step && step.currentProficiency >= step.target;
+    });
+    if (stillValid.length !== completed.length) {
+      setCompleted(stillValid);
+    }
+  }, [userSkills, role, steps, completed]);
+
+  const canCompleteStep = (step) => step.currentProficiency >= step.target;
+
   const toggleComplete = (index) => {
+    const step = steps[index];
     const isCompleted = completed.includes(index);
 
     if (isCompleted) {
-      // Uncompleting: remove this step AND all later steps (index >= current)
-      const newCompleted = completed.filter(i => i < index);
+      const newCompleted = completed.filter((i) => i < index);
       setCompleted(newCompleted);
-      // No XP penalty or popup for uncompleting
     } else {
-      // Completing: only allowed if this is the next unlocked step
-      // Next unlocked step index = completed.length
-      if (index !== completed.length) return; // locked or out of order
+      if (index !== completed.length) return;
+      if (!canCompleteStep(step)) return;
 
       const newCompleted = [...completed, index];
       setCompleted(newCompleted);
-      const gainedXP = steps[index].xp;
-      setXpPopup({ xp: gainedXP, skill: steps[index].title });
+      const gainedXP = step.xp;
+      setXpPopup({ xp: gainedXP, skill: step.skillName });
       setTimeout(() => setXpPopup(null), 2000);
       if (newCompleted.length === steps.length) {
         setShowConfetti(true);
@@ -249,26 +367,27 @@ export default function LearningPath() {
 
   const totalXP = completed.reduce((sum, idx) => sum + steps[idx].xp, 0);
   const maxXP = steps.reduce((sum, s) => sum + s.xp, 0);
-  const progress = maxXP === 0 ? 0 : (totalXP / maxXP) * 100;
+  const progressPercent = maxXP === 0 ? 0 : (totalXP / maxXP) * 100;
   const allCompleted = completed.length === steps.length;
 
   return (
     <div className="lp-container">
       {showConfetti && <Confetti />}
-      {xpPopup && (
-        <div className="xp-popup">
-          +{xpPopup.xp} XP! 🎉
-        </div>
-      )}
+      {xpPopup && <div className="xp-popup">+{xpPopup.xp} XP! 🎉</div>}
 
       {showResetConfirm && (
         <div className="reset-modal-overlay">
           <div className="reset-modal">
             <h3>Reset Progress?</h3>
-            <p>Are you sure you want to reset all completed steps for <strong>{role.name}</strong>? This cannot be undone.</p>
+            <p>
+              Are you sure you want to reset all completed steps for{" "}
+              <strong>{role.name}</strong>? This cannot be undone.
+            </p>
             <div className="reset-modal-actions">
               <button onClick={() => setShowResetConfirm(false)}>Cancel</button>
-              <button onClick={resetProgress} className="reset-confirm">Yes, Reset</button>
+              <button onClick={resetProgress} className="reset-confirm">
+                Yes, Reset
+              </button>
             </div>
           </div>
         </div>
@@ -294,44 +413,135 @@ export default function LearningPath() {
           </span>
         </div>
         <div className="xp-bar-container">
-          <div className="xp-bar-fill" style={{ width: `${progress}%` }} />
+          <div className="xp-bar-fill" style={{ width: `${progressPercent}%` }} />
         </div>
-        {allCompleted && (
-          <div className="mastery-badge">🏅 All skills completed!</div>
-        )}
+        {allCompleted && <div className="mastery-badge">🏅 All skills completed!</div>}
       </div>
 
       <div className="lp-steps">
         {steps.map((step, idx) => {
           const isDone = completed.includes(idx);
-          // Determine if this step is locked (not yet reachable)
-          const isLocked = !isDone && idx > completed.length;
-          const resources = resourceMap[step.skillName] || getResourceSuggestions(step.skillName);
+          const isNext = idx === completed.length;
+          const isLocked = !isDone && !isNext;
+          const canComplete = canCompleteStep(step);
+          const completeEnabled = isNext && canComplete && !isDone;
+
+          const skillProgressPercent = Math.min(
+            100,
+            (step.currentProficiency / step.target) * 100
+          );
+          const gapDisplay = step.gap < 0 ? `${step.gap}%` : `+${step.gap}%`;
+
+          const resources =
+            resourceMap[step.skillName] || getResourceSuggestions(step.skillName);
 
           return (
-            <div key={idx} className={`lp-card ${isDone ? "done" : ""} ${isLocked ? "locked" : ""}`}>
-              <h3>
-                {step.title}
-                {isLocked && <span className="lock-icon"> 🔒</span>}
-              </h3>
-              <div className="lp-meta">
-                <span className="xp-badge">⚡ {step.xp} XP</span>
+            <div
+              key={idx}
+              className={`lp-card ${isDone ? "done" : ""} ${isLocked ? "locked" : ""}`}
+            >
+              <div className="card-header">
+                <h3>
+                  Master {step.skillName}
+                  {isLocked && <span className="lock-icon"> 🔒</span>}
+                </h3>
+                <div className="difficulty-time">
+                  <span className={`difficulty ${step.meta.difficulty.toLowerCase()}`}>
+                    {step.meta.difficulty}
+                  </span>
+                  <span className="time-estimate">⏱️ {step.meta.timeDays}</span>
+                </div>
               </div>
+
+              <div className="xp-badge-large">XP: {step.xp}</div>
+
+              <div className="progress-section">
+                <div className="progress-labels">
+                  <span>Progress:</span>
+                  <span>
+                    {Math.floor(skillProgressPercent)}% / {step.target}%
+                  </span>
+                </div>
+                <div className="skill-progress-bar">
+                  <div
+                    className="skill-progress-fill"
+                    style={{ width: `${skillProgressPercent}%` }}
+                  />
+                </div>
+                <div className="gap-info">Gap: {gapDisplay}</div>
+              </div>
+
+              <div className="market-stats">
+                <div className="job-demand">
+                  💼 Used in {step.meta.jobDemand}% of {role.name?.toLowerCase() || "tech"} jobs
+                </div>
+                <div className="job-impact">
+                  📊 Impact: +{step.meta.impact}% job match
+                </div>
+              </div>
+
+              <div className="daily-task">
+                <strong>📅 Today:</strong> {step.meta.dailyTask}
+              </div>
+
+              {!canComplete && step.currentProficiency < step.target && (
+                <div className="motivation-message">
+                  🔥 You’re close! Just {step.target - step.currentProficiency}% more
+                </div>
+              )}
+
               <div className="resource-suggestion">
-                <strong>📌 Recommended projects & courses:</strong>
+                <strong>📚 Resources:</strong>
                 <ul>
-                  {resources.map((res, i) => (
+                  {resources.slice(0, 3).map((res, i) => (
                     <li key={i}>{res}</li>
                   ))}
                 </ul>
               </div>
-              <button
-                className={`complete-btn ${isDone ? "done" : ""} ${isLocked ? "locked" : ""}`}
-                onClick={() => toggleComplete(idx)}
-                disabled={isLocked}
-              >
-                {isDone ? "Completed ✓" : (isLocked ? "🔒 Locked" : "Mark Complete")}
-              </button>
+
+              <div className="action-buttons">
+                <button
+                  className="start-btn"
+                  onClick={() =>
+                    window.open(
+                      `https://www.google.com/search?q=learn+${encodeURIComponent(
+                        step.skillName
+                      )}`,
+                      "_blank"
+                    )
+                  }
+                >
+                  ▶ Start Learning
+                </button>
+                <button
+                  className="practice-btn"
+                  onClick={() =>
+                    window.open(
+                      `https://www.google.com/search?q=practice+${encodeURIComponent(
+                        step.skillName
+                      )}+coding`,
+                      "_blank"
+                    )
+                  }
+                >
+                  🧪 Practice
+                </button>
+                <button
+                  className={`complete-btn ${isDone ? "done" : ""} ${
+                    !completeEnabled ? "disabled" : ""
+                  }`}
+                  onClick={() => toggleComplete(idx)}
+                  disabled={!completeEnabled}
+                >
+                  {isDone
+                    ? "Completed ✓"
+                    : !canComplete
+                    ? `🔒 Mark Complete (needs ${step.target}%)`
+                    : !isNext
+                    ? "🔒 Locked"
+                    : "Mark Complete"}
+                </button>
+              </div>
             </div>
           );
         })}
