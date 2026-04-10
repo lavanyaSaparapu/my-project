@@ -4,32 +4,55 @@ import { useSkillContext } from "../context/SkillContext";
 import ReactMarkdown from "react-markdown";
 import "./LearningPage.css";
 
-// Optional: Add a fallback plan for development or when API fails
-const FALLBACK_PLAN = `
-#### 🎯 Goal
-Your goal is to improve your **${selectedRole}** skills from ${matchScore}% to 85%+ by focusing on hands-on projects.
+// ========== DYNAMIC FALLBACK PLAN (uses actual user data) ==========
+const generateFallbackPlan = (selectedRole, matchScore, prioritySkills, userSkills, requiredSkills) => {
+  const topSkill = prioritySkills[0] || "core skill";
+  const secondSkill = prioritySkills[1] || "another key skill";
+  const thirdSkill = prioritySkills[2] || "supporting skill";
 
-#### 🔥 Priority Skills to Learn
-- **${prioritySkills[0]}** – Why it matters: Core requirement for ${selectedRole}.
-- **${prioritySkills[1]}** – Why it matters: Frequently used in daily tasks.
+  return `
+### 🎯 Goal
+Your goal is to raise your **${selectedRole}** match from ${matchScore}% to 85%+ by focusing on **${topSkill}** (currently ${userSkills[topSkill] || 0}% vs ${requiredSkills[topSkill] || 80}% required) and **${secondSkill}** (${userSkills[secondSkill] || 0}% vs ${requiredSkills[secondSkill] || 75}%). Complete the 5‑day project below.
 
-#### 📅 Daily Learning Plan
-**Day 1:** Study ${prioritySkills[0]} fundamentals → Build a small component.  
-**Day 2:** Practice ${prioritySkills[1]} → Solve 3 real-world exercises.  
-**Day 3:** Integrate both skills into a mini project.
+### 🔥 Priority Skills to Learn
+**${topSkill}**  
+- *Why it matters*: Used in 80% of ${selectedRole} job tasks (e.g., building UI components, state management).  
+- *What to focus on*: Core syntax, hooks/patterns, error handling, and debugging.  
+- *Real‑world usage*: Create a dynamic dashboard, a form with validation, or a real‑time filter.
 
-#### 🛠️ Hands-on Practice
-**Mini Project:** Create a dashboard that uses ${prioritySkills[0]} and ${prioritySkills[1]}.  
-**Challenge:** Refactor an existing feature to improve performance.
+**${secondSkill}**  
+- *Why it matters*: Essential for data fetching, API integration, or backend logic.  
+- *What to focus on*: Async/await, promises, HTTP requests, and error boundaries.  
+- *Real‑world usage*: Build a weather app, a search autocomplete, or a comment system.
 
-#### 📚 Resources
-- [MDN Web Docs](https://developer.mozilla.org)
-- [freeCodeCamp](https://freecodecamp.org)
+**${thirdSkill}**  
+- *Why it matters*: Improves code maintainability and team collaboration.  
+- *What to focus on*: Code organization, testing basics, and version control (Git).  
+- *Real‑world usage*: Refactor a messy function, write a unit test, or commit a feature branch.
 
-#### 🚀 Pro Tips
-- Code for 1 hour daily, not 5 hours on weekends.
-- Explain concepts aloud to reinforce learning.
+### 📅 Daily Learning Plan (5 distinct days)
+- **Day 1 (Environment & Basics)**: Set up a new project, write 5 small functions using ${topSkill}, and run them locally.  
+- **Day 2 (Component / Module)**: Build a reusable ${topSkill} component (e.g., a card, button, or input group) with props.  
+- **Day 3 (Data Integration)**: Fetch data from a public API using ${secondSkill} and display it inside your component.  
+- **Day 4 (Refactor & Test)**: Add error handling, loading states, and one unit test for your component.  
+- **Day 5 (Project Finish)**: Combine everything into a mini‑portfolio piece – deploy it on Vercel/Netlify.
+
+### 🛠️ Hands‑on Practice
+**Mini Project**: Create a "Skill Gap Tracker" that lists ${prioritySkills.join(", ")}. Allow users to rate their own levels, compare to required levels, and show a progress bar. Use ${topSkill} for the UI and ${secondSkill} for saving data (localStorage or mock API).  
+**Real‑world Challenge**: Find an open issue labeled "good first issue" on a GitHub repo that uses ${topSkill}. Try to reproduce the bug or implement the feature locally.
+
+### 📚 Recommended Resources
+- **Course**: "The Complete ${topSkill} Course" on Udemy (or free equivalent on YouTube: "${topSkill} Tutorial for Beginners").  
+- **Docs**: Official ${topSkill} documentation – focus on the "Getting Started" and "Advanced Concepts" sections.  
+- **Practice**: LeetCode's ${topSkill} track + Frontend Mentor (real‑world design challenges).
+
+### 🚀 Pro Tips
+- **Code daily** – Even 30 minutes > 5 hours on weekends. Consistency builds muscle memory.  
+- **Explain out loud** – Teach your solution to a rubber duck or record a voice memo.  
+- **Limit AI copy‑paste** – Use AI to explain errors, not to write entire functions.  
+- **Review before new** – Spend 5 minutes reviewing yesterday's code before starting today's task.
 `;
+};
 
 export default function LearningPage() {
   const { selectedRole, rolesWithMetrics, userSkills } = useSkillContext();
@@ -39,35 +62,64 @@ export default function LearningPage() {
   const roleData = rolesWithMetrics.find(r => r.name === selectedRole);
   const matchScore = roleData?.matchScore || 0;
   const prioritySkills = roleData?.prioritySkills || [];
+  const requiredSkills = roleData?.requiredSkills || {};
 
   const generatePlan = async () => {
     if (!roleData) return;
     setLoading(true);
 
+    // Build a clear prompt that forces unique content per section
     const prompt = `
-You are an expert career mentor and software engineering coach.
+You are an expert career mentor. Generate a personalized learning plan for:
 
-Based on the user's skill data and target role, generate a personalized learning plan.
+Target Role: ${selectedRole}
+Match Score: ${matchScore}%
+Current Skills: ${JSON.stringify(userSkills)}
+Required Skills: ${JSON.stringify(requiredSkills)}
+Priority Skills: ${prioritySkills.join(", ")}
 
-### User Data:
-- Target Role: ${selectedRole}
-- Match Score: ${matchScore}%
-- Skills: ${JSON.stringify(userSkills)}
-- Required Skills: ${JSON.stringify(roleData.requiredSkills)}
-- Priority Skills: ${prioritySkills.join(", ")}
+STRICT RULES:
+1. Each section (🎯 Goal, 🔥 Priority Skills, 📅 Daily Plan, 🛠️ Hands-on Practice, 📚 Resources, 🚀 Pro Tips) must contain COMPLETELY DIFFERENT content. No repeating advice, examples, or project ideas across sections.
+2. Daily Plan: exactly 5 days, each day a distinct task (no repetition). Use Day 1, Day 2, etc.
+3. Priority Skills: For each skill, write "Why it matters", "What to focus on", "Real-world usage" – these must be specific to ${selectedRole}.
+4. Hands-on Practice: The mini project must combine at least 2 priority skills. The real-world challenge must be different from the mini project.
+5. Resources: Recommend one specific course, one official doc, and one practice platform – all relevant to the priority skills.
+6. Pro Tips: 4 actionable tips that are NOT about "coding daily" or "taking breaks" (be creative).
 
----
-
-Follow this structure exactly:
+Output format (exact markdown):
 
 #### 🎯 Goal
-#### 🔥 Priority Skills to Learn
-#### 📅 Daily Learning Plan (3-5 days)
-#### 🛠️ Hands-on Practice
-#### 📚 Resources
-#### 🚀 Pro Tips
+(one paragraph only)
 
-Keep it concise, practical, and project-based. Use bullet points and clear headings.
+#### 🔥 Priority Skills to Learn
+**Skill Name**  
+- Why it matters  
+- What to focus on  
+- Real-world usage
+
+(Repeat for each priority skill)
+
+#### 📅 Daily Learning Plan (5 days)
+**Day 1:** (unique activity)  
+**Day 2:** (different activity)  
+**Day 3:** (different)  
+**Day 4:** (different)  
+**Day 5:** (different)
+
+#### 🛠️ Hands-on Practice
+**Mini Project:** (description)  
+**Real-world Challenge:** (description)
+
+#### 📚 Resources
+**Course:** (name and platform)  
+**Docs:** (official docs name)  
+**Practice:** (platform name)
+
+#### 🚀 Pro Tips
+- (tip 1)  
+- (tip 2)  
+- (tip 3)  
+- (tip 4)
 `;
 
     try {
@@ -75,26 +127,27 @@ Keep it concise, practical, and project-based. Use bullet points and clear headi
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`, // Use env variable!
+          Authorization: `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
         },
         body: JSON.stringify({
           model: "gpt-4o-mini",
           messages: [{ role: "user", content: prompt }],
-          temperature: 0.7,
+          temperature: 0.8, // Slightly higher for more variety
         }),
       });
 
       if (!res.ok) throw new Error("API request failed");
       const data = await res.json();
       const content = data.choices?.[0]?.message?.content;
-      setPlan(content || "⚠️ No content received.");
+      if (content) {
+        setPlan(content);
+      } else {
+        throw new Error("Empty response");
+      }
     } catch (err) {
       console.error(err);
-      // Fallback plan (replace placeholders)
-      let fallback = FALLBACK_PLAN.replace(/\${selectedRole}/g, selectedRole)
-        .replace(/\${matchScore}/g, matchScore)
-        .replace(/\${prioritySkills\[0\]}/g, prioritySkills[0] || "core skills")
-        .replace(/\${prioritySkills\[1\]}/g, prioritySkills[1] || "secondary skills");
+      // Use dynamic fallback with actual data
+      const fallback = generateFallbackPlan(selectedRole, matchScore, prioritySkills, userSkills, requiredSkills);
       setPlan(fallback);
     }
 
@@ -115,11 +168,9 @@ Keep it concise, practical, and project-based. Use bullet points and clear headi
 
   return (
     <div className="learning-container">
-      {/* Animated blobs */}
       <div className="blob blob-1"></div>
       <div className="blob blob-2"></div>
 
-      {/* Header section */}
       <div className="learning-header">
         <div className="title-section">
           <span className="header-icon">🧠</span>
@@ -130,20 +181,16 @@ Keep it concise, practical, and project-based. Use bullet points and clear headi
         </div>
       </div>
 
-      {/* Regenerate button */}
       <button className="generate-btn" onClick={generatePlan} disabled={loading}>
         {loading ? (
           <>
             <span className="spinner"></span> Generating...
           </>
         ) : (
-          <>
-            🔄 Regenerate Plan
-          </>
+          <>🔄 Regenerate Plan</>
         )}
       </button>
 
-      {/* Plan output with markdown rendering */}
       <div className="plan-card">
         {loading ? (
           <div className="skeleton-loader">
@@ -161,6 +208,7 @@ Keep it concise, practical, and project-based. Use bullet points and clear headi
               ul: ({ node, ...props }) => <ul className="plan-ul" {...props} />,
               li: ({ node, ...props }) => <li className="plan-li" {...props} />,
               a: ({ node, ...props }) => <a className="plan-link" target="_blank" rel="noopener noreferrer" {...props} />,
+              strong: ({ node, ...props }) => <strong className="plan-strong" {...props} />,
             }}
           >
             {plan}
@@ -168,9 +216,8 @@ Keep it concise, practical, and project-based. Use bullet points and clear headi
         )}
       </div>
 
-      {/* Pro tip footer */}
       <div className="learning-footer">
-        💡 Tip: Update your skills on the Dashboard and regenerate the plan for new recommendations!
+        💡 Tip: Adjust your skill sliders on the Dashboard, then regenerate for updated recommendations.
       </div>
     </div>
   );

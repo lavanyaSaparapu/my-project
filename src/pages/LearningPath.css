@@ -7,7 +7,7 @@
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* Animated blobs (same as dashboard) */
+/* Animated blobs */
 .blob {
   position: fixed;
   border-radius: 50%;
@@ -122,34 +122,96 @@
   to { transform: rotate(360deg); }
 }
 
-/* Plan Card */
+/* Plan Card (main container) */
 .plan-card {
-  background: rgba(20, 20, 50, 0.7);
-  backdrop-filter: blur(12px);
+  background: rgba(20, 20, 50, 0.5);
+  backdrop-filter: blur(8px);
   border-radius: 32px;
   padding: 2rem;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.08);
   position: relative;
   z-index: 2;
-  transition: all 0.2s;
-  overflow-x: auto;
-}
-.plan-card:hover {
-  border-color: rgba(139,92,246,0.5);
 }
 
-/* Markdown Styling */
+/* ========== DISTINCT SECTION CARDS ========== */
+/* Each section becomes a visually unique card */
+
+/* 🎯 Goal section */
+.plan-h3:first-of-type {
+  background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(0,0,0,0.3));
+  border-left: 5px solid #818cf8;
+  padding: 0.8rem 1.2rem;
+  border-radius: 20px;
+  margin-top: 0;
+}
+
+/* 🔥 Priority Skills section */
+.plan-h3:nth-of-type(2) + .plan-ul,
+.plan-h3:nth-of-type(2) + div + .plan-ul {
+  background: rgba(0,0,0,0.3);
+  border-radius: 24px;
+  padding: 1rem 1.5rem;
+  border: 1px solid rgba(245,158,11,0.3);
+}
+
+/* 📅 Daily Learning Plan section */
+.plan-h3:nth-of-type(3) {
+  border-left: 5px solid #10b981;
+}
+.plan-h3:nth-of-type(3) + p,
+.plan-h3:nth-of-type(3) + div {
+  background: rgba(16,185,129,0.05);
+  border-radius: 24px;
+  padding: 1rem;
+}
+
+/* 🛠️ Hands-on Practice section */
+.plan-h3:nth-of-type(4) {
+  border-left: 5px solid #f59e0b;
+}
+.plan-h3:nth-of-type(4) + p,
+.plan-h3:nth-of-type(4) + div {
+  background: linear-gradient(135deg, rgba(245,158,11,0.1), rgba(0,0,0,0.2));
+  border-radius: 24px;
+  padding: 1rem;
+  border: 1px solid rgba(245,158,11,0.2);
+}
+
+/* 📚 Resources section */
+.plan-h3:nth-of-type(5) {
+  border-left: 5px solid #ec4899;
+}
+.plan-h3:nth-of-type(5) + p,
+.plan-h3:nth-of-type(5) + div {
+  background: rgba(236,72,153,0.05);
+  border-radius: 24px;
+  padding: 1rem;
+}
+
+/* 🚀 Pro Tips section */
+.plan-h3:nth-of-type(6) {
+  border-left: 5px solid #22d3ee;
+}
+.plan-h3:nth-of-type(6) + ul,
+.plan-h3:nth-of-type(6) + div ul {
+  background: rgba(34,211,238,0.05);
+  border-radius: 24px;
+  padding: 1rem 2rem;
+  list-style-type: none;
+}
+
+/* Markdown element styling */
 .plan-h3 {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   color: white;
-  margin: 1.5rem 0 0.8rem 0;
-  border-left: 4px solid #7c3aed;
+  margin: 2rem 0 1rem 0;
   padding-left: 1rem;
+  font-weight: 600;
 }
 .plan-h4 {
   font-size: 1.2rem;
   color: #fbbf24;
-  margin: 1.2rem 0 0.6rem 0;
+  margin: 1rem 0 0.5rem;
 }
 .plan-p {
   color: #cbd5e1;
@@ -162,8 +224,11 @@
 }
 .plan-li {
   color: #cbd5e1;
-  margin: 0.5rem 0;
+  margin: 0.6rem 0;
   line-height: 1.5;
+}
+.plan-strong {
+  color: #a78bfa;
 }
 .plan-link {
   color: #a78bfa;
