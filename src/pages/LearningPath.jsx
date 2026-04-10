@@ -4,7 +4,7 @@ import { useSkillContext } from "../context/SkillContext";
 import "./LearningPath.css";
 
 // ------------------------------------------------------------------
-// Helper: difficulty, time estimate, job demand, impact, daily task
+// Skill metadata (difficulty, time, job demand, impact, daily task)
 // ------------------------------------------------------------------
 const skillMetadata = {
   React: {
@@ -77,7 +77,6 @@ const skillMetadata = {
     impact: 8,
     dailyTask: "✔ Practice branching & merging",
   },
-  // Add more skills as needed
 };
 
 const defaultMeta = {
@@ -91,6 +90,55 @@ const defaultMeta = {
 function getSkillMeta(skillName) {
   return skillMetadata[skillName] || defaultMeta;
 }
+
+// ------------------------------------------------------------------
+// Practice tasks (one per skill for demonstration)
+// ------------------------------------------------------------------
+const practiceTasks = {
+  React: {
+    title: "Build a Counter Component",
+    description:
+      "Write a React component that has a button and displays a count. Each click increments the count by 1.",
+    hint: "Use useState hook.",
+    expectedKeywords: ["useState", "count", "onClick"],
+  },
+  JavaScript: {
+    title: "Array Manipulation",
+    description:
+      "Write a function that takes an array of numbers and returns a new array with each number doubled.",
+    hint: "Use map() method.",
+    expectedKeywords: ["map", "return", "function"],
+  },
+  Python: {
+    title: "String Reversal",
+    description: "Write a Python function that reverses a given string.",
+    hint: "Use slicing or loop.",
+    expectedKeywords: ["def", "return", "[::-1]"],
+  },
+  SQL: {
+    title: "Write a JOIN Query",
+    description:
+      "Given two tables: 'users' (id, name) and 'orders' (id, user_id, amount). Write a query to get each user's total order amount.",
+    hint: "Use SUM and GROUP BY.",
+    expectedKeywords: ["SUM", "GROUP BY", "JOIN"],
+  },
+  Git: {
+    title: "Git Branching",
+    description:
+      "Write the Git commands to create a new branch called 'feature-login', switch to it, and then merge it back to main.",
+    hint: "Use git branch, git checkout, git merge.",
+    expectedKeywords: ["git branch", "git checkout", "git merge"],
+  },
+};
+
+const getPracticeTask = (skillName) => {
+  return practiceTasks[skillName] || {
+    title: `Practice ${skillName}`,
+    description: `Write a small code snippet or explanation that demonstrates your understanding of ${skillName}.`,
+    hint: "Be specific and show your knowledge.",
+    expectedKeywords: [],
+  };
+};
 
 // ------------------------------------------------------------------
 // Resource suggestions
@@ -214,7 +262,7 @@ const getResourceSuggestions = (skillName) => [
 ];
 
 // ------------------------------------------------------------------
-// Confetti component (unchanged)
+// Confetti component
 // ------------------------------------------------------------------
 const Confetti = () => {
   useEffect(() => {
@@ -281,11 +329,17 @@ const Confetti = () => {
 // Main Component
 // ------------------------------------------------------------------
 export default function LearningPath() {
-  const { bestMatchRole, userSkills, rolesWithMetrics } = useSkillContext();
+  const { bestMatchRole, userSkills, rolesWithMetrics, updateSkillProficiency } = useSkillContext();
   const [completed, setCompleted] = useState([]);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [xpPopup, setXpPopup] = useState(null);
   const [showConfetti, setShowConfetti] = useState(false);
+
+  // Practice modal state
+  const [practiceModalOpen, setPracticeModalOpen] = useState(false);
+  const [currentPracticeSkill, setCurrentPracticeSkill] = useState(null);
+  const [userAnswer, setUserAnswer] = useState("");
+  const [practiceFeedback, setPracticeFeedback] = useState("");
 
   const role = bestMatchRole || rolesWithMetrics?.[0];
   const prioritySkills = role?.prioritySkills || [];
@@ -363,6 +417,59 @@ export default function LearningPath() {
     setShowResetConfirm(false);
   };
 
+  // Practice modal handlers
+  const openPracticeModal = (skillName) => {
+    setCurrentPracticeSkill(skillName);
+    setUserAnswer("");
+    setPracticeFeedback("");
+    setPracticeModalOpen(true);
+  };
+
+  const closePracticeModal = () => {
+    setPracticeModalOpen(false);
+    setCurrentPracticeSkill(null);
+    setUserAnswer("");
+    setPracticeFeedback("");
+  };
+
+  const submitPractice = () => {
+    if (!currentPracticeSkill) return;
+    const task = getPracticeTask(currentPracticeSkill);
+    // Simple evaluation: if expectedKeywords exist, check if at least one is present
+    let isCorrect = false;
+    if (task.expectedKeywords.length === 0) {
+      // No keywords defined: accept any answer with length > 10
+      isCorrect = userAnswer.trim().length > 10;
+    } else {
+      isCorrect = task.expectedKeywords.some(keyword =>
+        userAnswer.toLowerCase().includes(keyword.toLowerCase())
+      );
+    }
+
+    if (isCorrect) {
+      // Award 5-15 XP and increase proficiency by 2-5%
+      const xpGain = Math.floor(Math.random() * 15) + 5;
+      const proficiencyGain = Math.floor(Math.random() * 5) + 2;
+      const newProficiency = Math.min(100, (userSkills[currentPracticeSkill] || 0) + proficiencyGain);
+      
+      // Update context (if updateSkillProficiency exists)
+      if (updateSkillProficiency) {
+        updateSkillProficiency(currentPracticeSkill, newProficiency);
+      }
+      
+      setPracticeFeedback(`✅ Great work! +${xpGain} XP and +${proficiencyGain}% proficiency in ${currentPracticeSkill}.`);
+      setXpPopup({ xp: xpGain, skill: currentPracticeSkill });
+      setTimeout(() => setXpPopup(null), 2000);
+      
+      // Auto close after 2 seconds
+      setTimeout(() => {
+        closePracticeModal();
+      }, 2000);
+    } else {
+      setPracticeFeedback(`❌ Not quite. ${task.hint} Try again!`);
+    }
+  };
+
   if (!role) return <div className="lp-container">Loading...</div>;
 
   const totalXP = completed.reduce((sum, idx) => sum + steps[idx].xp, 0);
@@ -375,6 +482,7 @@ export default function LearningPath() {
       {showConfetti && <Confetti />}
       {xpPopup && <div className="xp-popup">+{xpPopup.xp} XP! 🎉</div>}
 
+      {/* Reset confirmation modal */}
       {showResetConfirm && (
         <div className="reset-modal-overlay">
           <div className="reset-modal">
@@ -388,6 +496,44 @@ export default function LearningPath() {
               <button onClick={resetProgress} className="reset-confirm">
                 Yes, Reset
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Practice Modal */}
+      {practiceModalOpen && currentPracticeSkill && (
+        <div className="practice-modal-overlay">
+          <div className="practice-modal">
+            <div className="practice-modal-header">
+              <h3>✍️ Practice: {currentPracticeSkill}</h3>
+              <button className="close-modal-btn" onClick={closePracticeModal}>×</button>
+            </div>
+            <div className="practice-task">
+              <h4>{getPracticeTask(currentPracticeSkill).title}</h4>
+              <p>{getPracticeTask(currentPracticeSkill).description}</p>
+              <div className="practice-hint">
+                💡 Hint: {getPracticeTask(currentPracticeSkill).hint}
+              </div>
+            </div>
+            <div className="practice-input-area">
+              <label>Your answer / code:</label>
+              <textarea
+                rows="8"
+                value={userAnswer}
+                onChange={(e) => setUserAnswer(e.target.value)}
+                placeholder="Write your solution here..."
+                className="code-textarea"
+              />
+            </div>
+            {practiceFeedback && (
+              <div className={`practice-feedback ${practiceFeedback.startsWith("✅") ? "success" : "error"}`}>
+                {practiceFeedback}
+              </div>
+            )}
+            <div className="practice-modal-actions">
+              <button onClick={closePracticeModal} className="cancel-practice">Cancel</button>
+              <button onClick={submitPractice} className="submit-practice">Submit</button>
             </div>
           </div>
         </div>
@@ -515,14 +661,7 @@ export default function LearningPath() {
                 </button>
                 <button
                   className="practice-btn"
-                  onClick={() =>
-                    window.open(
-                      `https://www.google.com/search?q=practice+${encodeURIComponent(
-                        step.skillName
-                      )}+coding`,
-                      "_blank"
-                    )
-                  }
+                  onClick={() => openPracticeModal(step.skillName)}
                 >
                   🧪 Practice
                 </button>

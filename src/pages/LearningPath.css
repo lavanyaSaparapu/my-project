@@ -474,6 +474,193 @@
   z-index: 10000;
 }
 
+
+
+
+/* Practice Modal Styles */
+.practice-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10002;
+  animation: fadeIn 0.2s ease;
+}
+
+.practice-modal {
+  background: #1e1e2f;
+  border-radius: 1.5rem;
+  width: 90%;
+  max-width: 700px;
+  max-height: 85vh;
+  overflow-y: auto;
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.5);
+  animation: scaleIn 0.2s ease;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.practice-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.practice-modal-header h3 {
+  margin: 0;
+  color: #a78bfa;
+}
+
+.close-modal-btn {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #94a3b8;
+  transition: color 0.2s;
+}
+
+.close-modal-btn:hover {
+  color: #f87171;
+}
+
+.practice-task {
+  padding: 1.2rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.practice-task h4 {
+  margin: 0 0 0.5rem 0;
+  color: #fbbf24;
+}
+
+.practice-task p {
+  color: #cbd5e1;
+  line-height: 1.5;
+  margin-bottom: 0.8rem;
+}
+
+.practice-hint {
+  background: rgba(245, 158, 11, 0.15);
+  padding: 0.5rem 1rem;
+  border-radius: 0.8rem;
+  font-size: 0.85rem;
+  color: #fbbf24;
+  border-left: 3px solid #fbbf24;
+}
+
+.practice-input-area {
+  padding: 1.2rem 1.5rem;
+}
+
+.practice-input-area label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.code-textarea {
+  width: 100%;
+  background: #0f0f1a;
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 0.8rem;
+  padding: 0.8rem;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.85rem;
+  color: #e2e8f0;
+  resize: vertical;
+}
+
+.code-textarea:focus {
+  outline: none;
+  border-color: #a78bfa;
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.3);
+}
+
+.practice-feedback {
+  margin: 0 1.5rem 1rem 1.5rem;
+  padding: 0.8rem;
+  border-radius: 0.8rem;
+  font-size: 0.9rem;
+}
+
+.practice-feedback.success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid #22c55e;
+}
+
+.practice-feedback.error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid #f87171;
+}
+
+.practice-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding: 1rem 1.5rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cancel-practice, .submit-practice {
+  padding: 0.6rem 1.2rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.cancel-practice {
+  background: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+}
+
+.cancel-practice:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.submit-practice {
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  color: white;
+}
+
+.submit-practice:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+/* Ensure modal is responsive */
+@media (max-width: 640px) {
+  .practice-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+  .practice-modal-header h3 {
+    font-size: 1.2rem;
+  }
+  .practice-task p, .practice-hint {
+    font-size: 0.8rem;
+  }
+  .code-textarea {
+    font-size: 0.75rem;
+  }
+}
 @keyframes popupFade {
   0% { opacity: 0; transform: scale(0.8) translateY(20px); }
   20% { opacity: 1; transform: scale(1.05) translateY(0); }
