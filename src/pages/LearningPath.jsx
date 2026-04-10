@@ -1,10 +1,9 @@
-// src/components/LearningPath.jsx
-import { useState, useEffect } from "react";
-import { useSkillContext } from "../context/SkillContext";
-import "./LearningPath.css";
+// LearningPath.jsx
+import React, { useState, useEffect } from 'react';
+import './LearningPath.css';
 
 // ------------------------------------------------------------------
-// Practice tasks for each skill (simple)
+// Practice tasks for each skill
 // ------------------------------------------------------------------
 const practiceTasks = {
   React: {
@@ -120,7 +119,22 @@ const Confetti = () => {
 // Main Component
 // ------------------------------------------------------------------
 export default function LearningPath() {
-  const { bestMatchRole, userSkills, rolesWithMetrics, updateSkillProficiency } = useSkillContext();
+  // Role definition (simplified, no external context)
+  const role = {
+    name: "Frontend Developer",
+    matchScore: 92,
+    prioritySkills: ["React", "JavaScript", "CSS", "Git", "Python"],
+  };
+
+  // User skills proficiency (0-100)
+  const [userSkills, setUserSkills] = useState({
+    React: 45,
+    JavaScript: 60,
+    CSS: 30,
+    Git: 25,
+    Python: 50,
+  });
+
   const [completed, setCompleted] = useState([]);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const [xpPopup, setXpPopup] = useState(null);
@@ -132,12 +146,9 @@ export default function LearningPath() {
   const [userAnswer, setUserAnswer] = useState("");
   const [practiceFeedback, setPracticeFeedback] = useState("");
 
-  const role = bestMatchRole || rolesWithMetrics?.[0];
-  const prioritySkills = role?.prioritySkills || [];
-
   const TARGET_PERCENT = 80;
 
-  const steps = prioritySkills.slice(0, 5).map((skill, idx) => {
+  const steps = role.prioritySkills.slice(0, 5).map((skill, idx) => {
     const current = Math.min(100, userSkills[skill] || 0);
     const gap = Math.max(0, TARGET_PERCENT - current);
     const xp = gap > 0 ? Math.floor(gap / 2) + 20 : 10;
@@ -153,21 +164,18 @@ export default function LearningPath() {
 
   // Load progress from localStorage
   useEffect(() => {
-    if (!role) return;
     const saved = localStorage.getItem(`learning_${role.name}`);
     if (saved) setCompleted(JSON.parse(saved));
     else setCompleted([]);
-  }, [role]);
+  }, [role.name]);
 
   // Save progress
   useEffect(() => {
-    if (role)
-      localStorage.setItem(`learning_${role.name}`, JSON.stringify(completed));
-  }, [completed, role]);
+    localStorage.setItem(`learning_${role.name}`, JSON.stringify(completed));
+  }, [completed, role.name]);
 
   // Re-check completion when userSkills change (real-time)
   useEffect(() => {
-    if (!role) return;
     const stillValid = completed.filter((idx) => {
       const step = steps[idx];
       return step && step.currentProficiency >= step.target;
@@ -175,7 +183,7 @@ export default function LearningPath() {
     if (stillValid.length !== completed.length) {
       setCompleted(stillValid);
     }
-  }, [userSkills, role, steps, completed]);
+  }, [userSkills, steps, completed]);
 
   const canCompleteStep = (step) => step.currentProficiency >= step.target;
 
@@ -207,6 +215,14 @@ export default function LearningPath() {
     setShowResetConfirm(false);
   };
 
+  // Update skill proficiency (from practice)
+  const updateSkillProficiency = (skillName, newValue) => {
+    setUserSkills((prev) => ({
+      ...prev,
+      [skillName]: Math.min(100, newValue),
+    }));
+  };
+
   // Practice modal handlers
   const openPracticeModal = (skillName) => {
     setCurrentPracticeSkill(skillName);
@@ -229,7 +245,7 @@ export default function LearningPath() {
     if (task.expectedKeywords.length === 0) {
       isCorrect = userAnswer.trim().length > 10;
     } else {
-      isCorrect = task.expectedKeywords.some(keyword =>
+      isCorrect = task.expectedKeywords.some((keyword) =>
         userAnswer.toLowerCase().includes(keyword.toLowerCase())
       );
     }
@@ -237,16 +253,16 @@ export default function LearningPath() {
     if (isCorrect) {
       const xpGain = Math.floor(Math.random() * 15) + 5;
       const proficiencyGain = Math.floor(Math.random() * 5) + 2;
-      const newProficiency = Math.min(100, (userSkills[currentPracticeSkill] || 0) + proficiencyGain);
-      
-      if (updateSkillProficiency) {
-        updateSkillProficiency(currentPracticeSkill, newProficiency);
-      }
-      
-      setPracticeFeedback(`✅ Great work! +${xpGain} XP and +${proficiencyGain}% proficiency in ${currentPracticeSkill}.`);
+      const newProficiency =
+        (userSkills[currentPracticeSkill] || 0) + proficiencyGain;
+      updateSkillProficiency(currentPracticeSkill, newProficiency);
+
+      setPracticeFeedback(
+        `✅ Great work! +${xpGain} XP and +${proficiencyGain}% proficiency in ${currentPracticeSkill}.`
+      );
       setXpPopup({ xp: xpGain, skill: currentPracticeSkill });
       setTimeout(() => setXpPopup(null), 2000);
-      
+
       setTimeout(() => {
         closePracticeModal();
       }, 2000);
@@ -254,8 +270,6 @@ export default function LearningPath() {
       setPracticeFeedback(`❌ Not quite. ${task.hint} Try again!`);
     }
   };
-
-  if (!role) return <div className="lp-container">Loading...</div>;
 
   const totalXP = completed.reduce((sum, idx) => sum + steps[idx].xp, 0);
   const maxXP = steps.reduce((sum, s) => sum + s.xp, 0);
@@ -292,7 +306,9 @@ export default function LearningPath() {
           <div className="practice-modal">
             <div className="practice-modal-header">
               <h3>✍️ Practice: {currentPracticeSkill}</h3>
-              <button className="close-modal-btn" onClick={closePracticeModal}>×</button>
+              <button className="close-modal-btn" onClick={closePracticeModal}>
+                ×
+              </button>
             </div>
             <div className="practice-task">
               <h4>{getPracticeTask(currentPracticeSkill).title}</h4>
@@ -312,13 +328,21 @@ export default function LearningPath() {
               />
             </div>
             {practiceFeedback && (
-              <div className={`practice-feedback ${practiceFeedback.startsWith("✅") ? "success" : "error"}`}>
+              <div
+                className={`practice-feedback ${
+                  practiceFeedback.startsWith("✅") ? "success" : "error"
+                }`}
+              >
                 {practiceFeedback}
               </div>
             )}
             <div className="practice-modal-actions">
-              <button onClick={closePracticeModal} className="cancel-practice">Cancel</button>
-              <button onClick={submitPractice} className="submit-practice">Submit</button>
+              <button onClick={closePracticeModal} className="cancel-practice">
+                Cancel
+              </button>
+              <button onClick={submitPractice} className="submit-practice">
+                Submit
+              </button>
             </div>
           </div>
         </div>
@@ -366,7 +390,9 @@ export default function LearningPath() {
           return (
             <div
               key={idx}
-              className={`lp-card ${isDone ? "done" : ""} ${isLocked ? "locked" : ""}`}
+              className={`lp-card ${isDone ? "done" : ""} ${
+                isLocked ? "locked" : ""
+              }`}
             >
               <div className="card-header">
                 <h3>
