@@ -4,95 +4,7 @@ import { useSkillContext } from "../context/SkillContext";
 import "./LearningPath.css";
 
 // ------------------------------------------------------------------
-// Skill metadata (difficulty, time, job demand, impact, daily task)
-// ------------------------------------------------------------------
-const skillMetadata = {
-  React: {
-    difficulty: "Medium",
-    timeDays: "2–3 days",
-    jobDemand: 85,
-    impact: 12,
-    dailyTask: "✔ Build a reusable component",
-  },
-  TypeScript: {
-    difficulty: "Medium",
-    timeDays: "2–3 days",
-    jobDemand: 70,
-    impact: 10,
-    dailyTask: "✔ Convert a JS component to TypeScript",
-  },
-  JavaScript: {
-    difficulty: "Medium",
-    timeDays: "2–3 days",
-    jobDemand: 90,
-    impact: 15,
-    dailyTask: "✔ Solve 3 array/object manipulation challenges",
-  },
-  "Node.js": {
-    difficulty: "Medium",
-    timeDays: "3–4 days",
-    jobDemand: 75,
-    impact: 10,
-    dailyTask: "✔ Create a simple REST API endpoint",
-  },
-  Python: {
-    difficulty: "Easy",
-    timeDays: "2–3 days",
-    jobDemand: 80,
-    impact: 8,
-    dailyTask: "✔ Write a function that processes a CSV file",
-  },
-  Docker: {
-    difficulty: "Hard",
-    timeDays: "3–4 days",
-    jobDemand: 60,
-    impact: 12,
-    dailyTask: "✔ Dockerize a Node.js app",
-  },
-  Kubernetes: {
-    difficulty: "Hard",
-    timeDays: "4–5 days",
-    jobDemand: 55,
-    impact: 15,
-    dailyTask: "✔ Deploy a microservice on minikube",
-  },
-  AWS: {
-    difficulty: "Hard",
-    timeDays: "4–5 days",
-    jobDemand: 70,
-    impact: 14,
-    dailyTask: "✔ Create an S3 bucket and host a static site",
-  },
-  SQL: {
-    difficulty: "Easy",
-    timeDays: "2–3 days",
-    jobDemand: 85,
-    impact: 10,
-    dailyTask: "✔ Write a JOIN query with aggregation",
-  },
-  Git: {
-    difficulty: "Easy",
-    timeDays: "1–2 days",
-    jobDemand: 95,
-    impact: 8,
-    dailyTask: "✔ Practice branching & merging",
-  },
-};
-
-const defaultMeta = {
-  difficulty: "Medium",
-  timeDays: "2–3 days",
-  jobDemand: 65,
-  impact: 8,
-  dailyTask: "✔ Complete one learning module",
-};
-
-function getSkillMeta(skillName) {
-  return skillMetadata[skillName] || defaultMeta;
-}
-
-// ------------------------------------------------------------------
-// Practice tasks (one per skill for demonstration)
+// Practice tasks for each skill (simple)
 // ------------------------------------------------------------------
 const practiceTasks = {
   React: {
@@ -141,128 +53,7 @@ const getPracticeTask = (skillName) => {
 };
 
 // ------------------------------------------------------------------
-// Resource suggestions
-// ------------------------------------------------------------------
-const resourceMap = {
-  TypeScript: [
-    "📘 TypeScript Handbook (official docs)",
-    "🎓 Udemy: 'Understanding TypeScript' by Maximilian",
-    "🛠️ Project: Build a type-safe React app with TS",
-    "📝 Convert a JavaScript project to TypeScript",
-  ],
-  Testing: [
-    "🧪 Jest + React Testing Library tutorial (TestingJavaScript.com)",
-    "🎓 Course: 'Testing React with Jest & RTL' (Udemy)",
-    "🛠️ Project: Write unit/integration tests for a to-do app",
-    "🔍 End‑to‑end testing with Cypress",
-  ],
-  Performance: [
-    "⚡ Web.dev Learn Performance (free course)",
-    "🎓 Coursera: 'Website Performance Optimization'",
-    "🛠️ Project: Audit & optimize a live site using Lighthouse",
-    "📉 Lazy loading, code splitting, and image optimization",
-  ],
-  Docker: [
-    "🐳 Docker Curriculum (free, interactive)",
-    "🎓 Udemy: 'Docker Mastery' by Bret Fisher",
-    "🛠️ Project: Containerize a Node.js + MongoDB app",
-    "🐙 Multi-container apps with Docker Compose",
-  ],
-  Kubernetes: [
-    "☸️ K8s Official Tutorial (interactive)",
-    "🎓 Coursera: 'Introduction to Kubernetes'",
-    "🛠️ Project: Deploy a microservices app on minikube",
-    "🔧 Helm charts & CI/CD with Kubernetes",
-  ],
-  AWS: [
-    "☁️ AWS Skill Builder (free digital training)",
-    "🎓 Udemy: 'Ultimate AWS Certified Solutions Architect'",
-    "🛠️ Project: Serverless website (S3 + Lambda + API Gateway)",
-    "🏗️ Deploy a VPC with EC2 and RDS",
-  ],
-  Python: [
-    "🐍 Python Crash Course (book / exercises)",
-    "🎓 Coursera: 'Python for Everybody'",
-    "🛠️ Project: Build a data analysis script with pandas",
-    "🤖 Create a simple web scraper or API wrapper",
-  ],
-  ML: [
-    "🤖 Andrew Ng's ML Course (Coursera)",
-    "🎓 Fast.ai 'Practical Deep Learning'",
-    "🛠️ Kaggle competition: Titanic or House Prices",
-    "📊 Build a recommendation system",
-  ],
-  React: [
-    "⚛️ React Official Docs (beta.reactjs.org)",
-    "🎓 Scrimba: 'Learn React for Free'",
-    "🛠️ Project: E‑commerce frontend with cart & filters",
-    "🏗️ Build a dashboard with React Router & Context",
-  ],
-  "Node.js": [
-    "🟢 Node.js Design Patterns (book)",
-    "🎓 Udemy: 'Node.js Advanced Concepts'",
-    "🛠️ Project: REST API with Express + JWT auth",
-    "📡 Real‑time chat app with Socket.io",
-  ],
-  Security: [
-    "🔒 OWASP Top 10 (read & understand each)",
-    "🎓 TryHackMe: 'Web Hacking' room",
-    "🛠️ Project: Capture The Flag (CTF) challenges",
-    "🛡️ Implement auth & input sanitization in a sample app",
-  ],
-  JavaScript: [
-    "📜 'You Don't Know JS' (book series)",
-    "🎓 FreeCodeCamp: 'JavaScript Algorithms & Data Structures'",
-    "🛠️ Project: Build an interactive quiz app",
-    "🧩 Solve 10 LeetCode problems using JS",
-  ],
-  CSS: [
-    "🎨 CSS Tricks (complete guide to Flexbox/Grid)",
-    "🎓 Kevin Powell's free CSS course (YouTube)",
-    "🛠️ Project: Clone a modern website layout",
-    "📱 Build a fully responsive portfolio",
-  ],
-  HTML: [
-    "🌐 MDN Web Docs (HTML elements guide)",
-    "🎓 W3Schools HTML tutorial",
-    "🛠️ Project: Build a semantic HTML resume",
-    "📄 Create a multi‑page static site",
-  ],
-  SQL: [
-    "🗄️ SQLZoo (interactive exercises)",
-    "🎓 Mode Analytics SQL Tutorial",
-    "🛠️ Project: Design a database for an e‑commerce store",
-    "📊 Write complex JOINs & aggregations on a sample DB",
-  ],
-  Git: [
-    "🔀 GitHub Skills (interactive courses)",
-    "🎓 Atlassian Git Tutorials",
-    "🛠️ Project: Contribute to an open‑source repo",
-    "🌿 Practice branching & merging with a team simulation",
-  ],
-  Agile: [
-    "📋 Scrum Guide (official)",
-    "🎓 Coursera: 'Agile with Atlassian Jira'",
-    "🛠️ Project: Run a mock sprint with a team (or solo)",
-    "📈 Create user stories & velocity chart",
-  ],
-  "Problem Solving": [
-    "🧩 LeetCode (Easy/Medium problems)",
-    "🎓 HackerRank 'Problem Solving' track",
-    "🛠️ Project: Solve 10 algorithm challenges in your language",
-    "📘 Read 'Cracking the Coding Interview'",
-  ],
-};
-
-const getResourceSuggestions = (skillName) => [
-  `💡 Build a project using ${skillName} (search YouTube for tutorials)`,
-  `📚 Take a course on ${skillName} (Coursera/Udemy)`,
-  `📖 Read the official documentation for ${skillName}`,
-  `🛠️ Practice ${skillName} on a coding platform (Codecademy/FreeCodeCamp)`,
-];
-
-// ------------------------------------------------------------------
-// Confetti component
+// Confetti component (for completing all steps)
 // ------------------------------------------------------------------
 const Confetti = () => {
   useEffect(() => {
@@ -357,7 +148,6 @@ export default function LearningPath() {
       target: TARGET_PERCENT,
       gap: current - TARGET_PERCENT,
       xp,
-      meta: getSkillMeta(skill),
     };
   });
 
@@ -435,10 +225,8 @@ export default function LearningPath() {
   const submitPractice = () => {
     if (!currentPracticeSkill) return;
     const task = getPracticeTask(currentPracticeSkill);
-    // Simple evaluation: if expectedKeywords exist, check if at least one is present
     let isCorrect = false;
     if (task.expectedKeywords.length === 0) {
-      // No keywords defined: accept any answer with length > 10
       isCorrect = userAnswer.trim().length > 10;
     } else {
       isCorrect = task.expectedKeywords.some(keyword =>
@@ -447,12 +235,10 @@ export default function LearningPath() {
     }
 
     if (isCorrect) {
-      // Award 5-15 XP and increase proficiency by 2-5%
       const xpGain = Math.floor(Math.random() * 15) + 5;
       const proficiencyGain = Math.floor(Math.random() * 5) + 2;
       const newProficiency = Math.min(100, (userSkills[currentPracticeSkill] || 0) + proficiencyGain);
       
-      // Update context (if updateSkillProficiency exists)
       if (updateSkillProficiency) {
         updateSkillProficiency(currentPracticeSkill, newProficiency);
       }
@@ -461,7 +247,6 @@ export default function LearningPath() {
       setXpPopup({ xp: xpGain, skill: currentPracticeSkill });
       setTimeout(() => setXpPopup(null), 2000);
       
-      // Auto close after 2 seconds
       setTimeout(() => {
         closePracticeModal();
       }, 2000);
@@ -578,9 +363,6 @@ export default function LearningPath() {
           );
           const gapDisplay = step.gap < 0 ? `${step.gap}%` : `+${step.gap}%`;
 
-          const resources =
-            resourceMap[step.skillName] || getResourceSuggestions(step.skillName);
-
           return (
             <div
               key={idx}
@@ -591,12 +373,6 @@ export default function LearningPath() {
                   Master {step.skillName}
                   {isLocked && <span className="lock-icon"> 🔒</span>}
                 </h3>
-                <div className="difficulty-time">
-                  <span className={`difficulty ${step.meta.difficulty.toLowerCase()}`}>
-                    {step.meta.difficulty}
-                  </span>
-                  <span className="time-estimate">⏱️ {step.meta.timeDays}</span>
-                </div>
               </div>
 
               <div className="xp-badge-large">XP: {step.xp}</div>
@@ -617,48 +393,7 @@ export default function LearningPath() {
                 <div className="gap-info">Gap: {gapDisplay}</div>
               </div>
 
-              <div className="market-stats">
-                <div className="job-demand">
-                  💼 Used in {step.meta.jobDemand}% of {role.name?.toLowerCase() || "tech"} jobs
-                </div>
-                <div className="job-impact">
-                  📊 Impact: +{step.meta.impact}% job match
-                </div>
-              </div>
-
-              <div className="daily-task">
-                <strong>📅 Today:</strong> {step.meta.dailyTask}
-              </div>
-
-              {!canComplete && step.currentProficiency < step.target && (
-                <div className="motivation-message">
-                  🔥 You’re close! Just {step.target - step.currentProficiency}% more
-                </div>
-              )}
-
-              <div className="resource-suggestion">
-                <strong>📚 Resources:</strong>
-                <ul>
-                  {resources.slice(0, 3).map((res, i) => (
-                    <li key={i}>{res}</li>
-                  ))}
-                </ul>
-              </div>
-
               <div className="action-buttons">
-                <button
-                  className="start-btn"
-                  onClick={() =>
-                    window.open(
-                      `https://www.google.com/search?q=learn+${encodeURIComponent(
-                        step.skillName
-                      )}`,
-                      "_blank"
-                    )
-                  }
-                >
-                  ▶ Start Learning
-                </button>
                 <button
                   className="practice-btn"
                   onClick={() => openPracticeModal(step.skillName)}

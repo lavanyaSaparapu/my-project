@@ -1,4 +1,4 @@
-/* LearningPath.css – Dark theme, fully upgraded */
+/* LearningPath.css – Simplified for practice modal + tasks + code input */
 
 .lp-container {
   padding: 1.5rem;
@@ -12,10 +12,17 @@
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
+/* Header */
 .lp-header-section {
   display: flex;
   justify-content: space-between;
@@ -33,9 +40,7 @@
   -webkit-background-clip: text;
   color: transparent;
   animation: gradientFlow 4s ease infinite;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  margin: 0;
 }
 
 @keyframes gradientFlow {
@@ -44,29 +49,52 @@
   100% { background-position: 0% 50%; }
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .role-badge {
-  background: rgba(99,102,241,0.2);
+  background: rgba(99, 102, 241, 0.2);
   padding: 0.4rem 1rem;
   border-radius: 2rem;
   font-size: 0.9rem;
   color: #cbd5e1;
 }
 
+.reset-btn {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 2rem;
+  padding: 0.4rem 1rem;
+  color: #f87171;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reset-btn:hover {
+  background: rgba(239, 68, 68, 0.4);
+  transform: scale(1.02);
+}
+
 /* XP Card */
 .xp-card {
-  background: rgba(20,20,40,0.6);
+  background: rgba(20, 20, 40, 0.6);
   backdrop-filter: blur(12px);
   border-radius: 1.5rem;
   padding: 1.2rem 1.5rem;
   margin-bottom: 2rem;
-  border: 1px solid rgba(99,102,241,0.2);
+  border: 1px solid rgba(99, 102, 241, 0.2);
   transition: all 0.3s;
 }
 
 .xp-card:hover {
-  border-color: rgba(99,102,241,0.5);
+  border-color: rgba(99, 102, 241, 0.5);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .xp-header {
@@ -83,10 +111,9 @@
 
 .xp-bar-container {
   height: 12px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   overflow: hidden;
-  position: relative;
 }
 
 .xp-bar-fill {
@@ -95,7 +122,6 @@
   background-size: 200% auto;
   border-radius: 20px;
   transition: width 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-  position: relative;
   animation: fillGlow 2s ease infinite;
 }
 
@@ -132,25 +158,23 @@
 }
 
 .lp-card {
-  background: rgba(20,20,40,0.5);
+  background: rgba(20, 20, 40, 0.5);
   backdrop-filter: blur(8px);
   border-radius: 1.2rem;
   padding: 1.2rem;
-  border: 1px solid rgba(99,102,241,0.2);
+  border: 1px solid rgba(99, 102, 241, 0.2);
   transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-  position: relative;
-  overflow: hidden;
 }
 
 .lp-card:hover {
   transform: translateX(4px);
-  border-color: rgba(99,102,241,0.5);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  border-color: rgba(99, 102, 241, 0.5);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 .lp-card.done {
   border-left: 4px solid #22c55e;
-  background: rgba(34,197,94,0.05);
+  background: rgba(34, 197, 94, 0.05);
 }
 
 .lp-card.locked {
@@ -160,7 +184,7 @@
 .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
@@ -177,41 +201,10 @@
   margin-left: 0.3rem;
 }
 
-.difficulty-time {
-  display: flex;
-  gap: 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.difficulty.easy {
-  color: #22c55e;
-  background: rgba(34,197,94,0.2);
-  padding: 0.2rem 0.6rem;
-  border-radius: 20px;
-}
-
-.difficulty.medium {
-  color: #eab308;
-  background: rgba(234,179,8,0.2);
-  padding: 0.2rem 0.6rem;
-  border-radius: 20px;
-}
-
-.difficulty.hard {
-  color: #ef4444;
-  background: rgba(239,68,68,0.2);
-  padding: 0.2rem 0.6rem;
-  border-radius: 20px;
-}
-
-.time-estimate {
-  color: #94a3b8;
-}
-
+/* XP badge */
 .xp-badge-large {
   display: inline-block;
-  background: rgba(99,102,241,0.3);
+  background: rgba(99, 102, 241, 0.3);
   padding: 0.2rem 0.8rem;
   border-radius: 2rem;
   font-size: 0.8rem;
@@ -234,7 +227,7 @@
 }
 
 .skill-progress-bar {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   height: 8px;
   overflow: hidden;
@@ -254,71 +247,6 @@
   font-weight: 500;
 }
 
-/* Market stats */
-.market-stats {
-  display: flex;
-  gap: 1.5rem;
-  margin: 0.8rem 0;
-  font-size: 0.8rem;
-  background: rgba(99,102,241,0.1);
-  padding: 0.4rem 0.8rem;
-  border-radius: 40px;
-  flex-wrap: wrap;
-}
-
-.job-demand, .job-impact {
-  font-weight: 500;
-  color: #cbd5e1;
-}
-
-.daily-task {
-  background: rgba(245,158,11,0.15);
-  padding: 0.5rem 1rem;
-  border-radius: 40px;
-  font-size: 0.85rem;
-  margin: 0.8rem 0;
-  color: #fbbf24;
-  border: 1px solid rgba(245,158,11,0.3);
-}
-
-.motivation-message {
-  background: rgba(239,68,68,0.15);
-  padding: 0.5rem 1rem;
-  border-radius: 40px;
-  font-size: 0.8rem;
-  color: #f87171;
-  margin: 0.8rem 0;
-  font-weight: 500;
-  text-align: center;
-}
-
-/* Resources */
-.resource-suggestion {
-  margin: 0.8rem 0;
-  padding: 0.5rem;
-  background: rgba(99,102,241,0.1);
-  border-radius: 0.8rem;
-  font-size: 0.8rem;
-  color: #cbd5e1;
-}
-
-.resource-suggestion strong {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-size: 0.85rem;
-}
-
-.resource-suggestion ul {
-  margin: 0;
-  padding-left: 1.2rem;
-  list-style-type: disc;
-}
-
-.resource-suggestion li {
-  font-size: 0.8rem;
-  margin-bottom: 0.3rem;
-}
-
 /* Action buttons */
 .action-buttons {
   display: flex;
@@ -327,7 +255,7 @@
   margin-top: 1rem;
 }
 
-.start-btn, .practice-btn, .complete-btn {
+.practice-btn, .complete-btn {
   padding: 0.5rem 1rem;
   border-radius: 2rem;
   font-weight: 600;
@@ -337,26 +265,14 @@
   border: none;
 }
 
-.start-btn {
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  color: white;
-  border: 1px solid rgba(99,102,241,0.5);
-}
-
-.start-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  border-color: #a78bfa;
-}
-
 .practice-btn {
-  background: rgba(99,102,241,0.2);
+  background: rgba(99, 102, 241, 0.2);
   color: #a78bfa;
-  border: 1px solid rgba(99,102,241,0.4);
+  border: 1px solid rgba(99, 102, 241, 0.4);
 }
 
 .practice-btn:hover {
-  background: rgba(99,102,241,0.4);
+  background: rgba(99, 102, 241, 0.4);
   transform: translateY(-2px);
 }
 
@@ -366,7 +282,7 @@
 }
 
 .complete-btn.done {
-  background: rgba(34,197,94,0.2);
+  background: rgba(34, 197, 94, 0.2);
   color: #22c55e;
   border: 1px solid #22c55e;
   cursor: default;
@@ -380,17 +296,17 @@
 
 .complete-btn:not(:disabled):hover {
   transform: scale(1.02);
-  box-shadow: 0 4px 12px rgba(99,102,241,0.4);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
-/* Reset Modal (unchanged, already in your CSS) */
+/* Reset Modal (already in your CSS) */
 .reset-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -411,7 +327,7 @@
   max-width: 350px;
   width: 90%;
   border: 1px solid rgba(239, 68, 68, 0.3);
-  box-shadow: 0 20px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5);
 }
 
 .reset-modal h3 {
@@ -440,12 +356,12 @@
 }
 
 .reset-modal-actions button:first-child {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.1);
   color: #cbd5e1;
 }
 
 .reset-modal-actions button:first-child:hover {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .reset-confirm {
@@ -469,15 +385,19 @@
   font-weight: bold;
   font-size: 1rem;
   color: white;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   animation: popupFade 2s ease forwards;
   z-index: 10000;
 }
 
+@keyframes popupFade {
+  0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+  20% { opacity: 1; transform: scale(1.05) translateY(0); }
+  80% { opacity: 1; transform: scale(1) translateY(0); }
+  100% { opacity: 0; transform: scale(0.8) translateY(-20px); visibility: hidden; }
+}
 
-
-
-/* Practice Modal Styles */
+/* ========== PRACTICE MODAL STYLES ========== */
 .practice-modal-overlay {
   position: fixed;
   top: 0;
@@ -645,29 +565,6 @@
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
-/* Ensure modal is responsive */
-@media (max-width: 640px) {
-  .practice-modal {
-    width: 95%;
-    max-height: 90vh;
-  }
-  .practice-modal-header h3 {
-    font-size: 1.2rem;
-  }
-  .practice-task p, .practice-hint {
-    font-size: 0.8rem;
-  }
-  .code-textarea {
-    font-size: 0.75rem;
-  }
-}
-@keyframes popupFade {
-  0% { opacity: 0; transform: scale(0.8) translateY(20px); }
-  20% { opacity: 1; transform: scale(1.05) translateY(0); }
-  80% { opacity: 1; transform: scale(1) translateY(0); }
-  100% { opacity: 0; transform: scale(0.8) translateY(-20px); visibility: hidden; }
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .lp-container {
@@ -683,16 +580,21 @@
   .action-buttons {
     flex-direction: column;
   }
-  .start-btn, .practice-btn, .complete-btn {
+  .practice-btn, .complete-btn {
     width: 100%;
     text-align: center;
   }
-  .market-stats {
-    flex-direction: column;
-    gap: 0.3rem;
+  .practice-modal {
+    width: 95%;
+    max-height: 90vh;
   }
-  .card-header {
-    flex-direction: column;
-    align-items: flex-start;
+  .practice-modal-header h3 {
+    font-size: 1.2rem;
+  }
+  .practice-task p, .practice-hint {
+    font-size: 0.8rem;
+  }
+  .code-textarea {
+    font-size: 0.75rem;
   }
 }
