@@ -14,7 +14,6 @@ export default function Signin() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const navigate = useNavigate();
 
-  // Parallax effect on particles
   useEffect(() => {
     const handleMouseMove = (e) => {
       const x = (e.clientX / window.innerWidth) - 0.5;
@@ -47,13 +46,17 @@ export default function Signin() {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email.trim(), password);
       const token = await userCredential.user.getIdToken();
+
       localStorage.setItem("token", token);
       localStorage.setItem("currentUser", JSON.stringify({
         email: userCredential.user.email,
         uid: userCredential.user.uid,
         lastLogin: new Date().toISOString()
       }));
-      navigate("/dashboard");
+
+      // ✅ CHANGED ONLY THIS LINE
+      navigate("/home");
+
     } catch (error) {
       let errorMessage = "";
       switch (error.code) {
@@ -83,7 +86,7 @@ export default function Signin() {
 
   return (
     <div className="signin-container">
-      {/* Animated gradient background orbs with parallax */}
+
       <div 
         className="orb orb-1"
         style={{ transform: `translate(${mousePosition.x * 20}px, ${mousePosition.y * 15}px)` }}
@@ -97,14 +100,12 @@ export default function Signin() {
         style={{ transform: `translate(${mousePosition.x * 15}px, ${-mousePosition.y * 10}px)` }}
       ></div>
 
-      {/* Floating particles */}
       <div className="particle particle-1"></div>
       <div className="particle particle-2"></div>
       <div className="particle particle-3"></div>
       <div className="particle particle-4"></div>
       <div className="particle particle-5"></div>
 
-      {/* Glow lines */}
       <div className="glow-line line-1"></div>
       <div className="glow-line line-2"></div>
 
@@ -131,9 +132,6 @@ export default function Signin() {
           
           <button className="btn-primary" onClick={handleEmail} disabled={!email || loading}>
             <span>Continue</span>
-            <svg className="btn-arrow" viewBox="0 0 24 24" fill="none">
-              <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
           </button>
           
           <div className="signup-link">
@@ -166,16 +164,7 @@ export default function Signin() {
           {error && <div className="error-message">{error}</div>}
           
           <button className="btn-primary" onClick={handleLogin} disabled={!password || loading}>
-            {loading ? (
-              <span className="spinner"></span>
-            ) : (
-              <>
-                <span>Resume Journey</span>
-                <svg className="btn-arrow" viewBox="0 0 24 24" fill="none">
-                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-              </>
-            )}
+            {loading ? <span className="spinner"></span> : <span>Resume Journey</span>}
           </button>
           
           <button className="btn-secondary" onClick={() => { 

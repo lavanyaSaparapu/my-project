@@ -16,7 +16,8 @@ const Navbar = () => {
 
  
   const navItems = [
-    { path: "/dashboard", label: "Dashboard", icon: "🏠" },
+    { path: "/overview", label: "Overview", icon: "🌐" },
+    { path: "/dashboard", label: "Dashboard", icon: "🧭" },
     { path: "/learning-path", label: "Learning Path", icon: "🗺️" },
     { path: "/practice", label: "Practice", icon: "🎯" },  
     { path: "/progress-tracking", label: "Progress", icon: "📶" },

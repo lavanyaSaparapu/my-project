@@ -20,6 +20,7 @@ import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import Notifications from "./pages/Notifications";
 import Practice from "./pages/Practice";
+import Overview from "./pages/Overview"; // ✅ ADDED
 
 // Layout
 import Navbar from "./components/Navbar";
@@ -79,16 +80,35 @@ const DashboardRoute = ({ element }) => (
   </ProtectedRoute>
 );
 
+// ================= NEW: PUBLIC ROUTE (PREVENT SIGNIN AFTER LOGIN) =================
+const PublicRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  return token ? <Navigate to="/overview" replace /> : children;
+};
+
 // ================= APP =================
 function App() {
   return (
-    <SkillProvider>   {/* 👈 Wrap everything with SkillProvider */}
+    <SkillProvider>
       <BrowserRouter>
         <Routes>
+
           {/* Public Routes */}
           <Route path="/" element={<Welcome />} />
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
+
+          {/* ✅ Prevent logged-in users from seeing signin/signup */}
+          <Route path="/signin" element={<PublicRoute><SignIn /></PublicRoute>} />
+          <Route path="/signup" element={<PublicRoute><SignUp /></PublicRoute>} />
+
+          {/* ✅ Redirect after login */}
+          <Route 
+            path="/home" 
+            element={
+              <ProtectedRoute>
+                <Navigate to="/overview" replace />
+              </ProtectedRoute>
+            } 
+          />
 
           {/* Protected Dashboard Routes */}
           <Route path="/dashboard" element={<DashboardRoute element={<Dashboard />} />} />
@@ -101,8 +121,22 @@ function App() {
           <Route path="/settings" element={<DashboardRoute element={<Settings />} />} />
           <Route path="/notifications" element={<DashboardRoute element={<Notifications />} />} />
           <Route path="/practice" element={<DashboardRoute element={<Practice />} />} />
+
+          {/* ✅ Overview Page */}
+          <Route path="/overview" element={<DashboardRoute element={<Overview />} />} />
+
           {/* 404 Page */}
-          <Route path="*" element={<div style={{ textAlign: "center", marginTop: "100px" }}><h1>404</h1><p>Page not found</p><a href="/">Go home</a></div>} />
+          <Route 
+            path="*" 
+            element={
+              <div style={{ textAlign: "center", marginTop: "100px" }}>
+                <h1>404</h1>
+                <p>Page not found</p>
+                <a href="/">Go home</a>
+              </div>
+            } 
+          />
+
         </Routes>
       </BrowserRouter>
     </SkillProvider>
