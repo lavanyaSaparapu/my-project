@@ -1,0 +1,30 @@
+{
+  "React": {
+    "easy": [
+      {
+        "id": 1,
+        "text": "What is a basic approach to best practices in React? (Q1)",
+        "options": [
+          "Follow established React conventions and standards",
+          "Ignore React best practices entirely",
+          "Use React without any testing",
+          "Overcomplicate React solutions with unnecessary code"
+        ],
+        "correctIndex": 0,
+        "explanation": "In React, follow established react conventions and standards is crucial for best practices. The other options lead to poor quality, technical debt, or increased risk."
+      },
+      {
+        "id": 2,
+        "text": "What is a basic approach to common pitfalls in React? (Q2)",
+        "options": [
+          "Overcomplicate React solutions with unnecessary code",
+          "Follow established React conventions and standards",
+          "Ignore React best practices entirely",
+          "Use React without any testing"
+        ],
+        "correctIndex": 1,
+        "explanation": "In React, follow established react conventions and standards is crucial for common pitfalls. The other options lead to poor quality, technical debt, or increased risk."
+      }
+    ]
+  }
+}

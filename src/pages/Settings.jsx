@@ -1,311 +1,449 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+// Settings.jsx
+import React, { useState, useEffect } from "react";
+import { useSkillContext } from "../context/SkillContext";
+import { ALL_SKILLS, rolesDataRaw } from "../data/SkillData";
 import "./Settings.css";
 
-// ========== AVATAR UPLOAD ==========
-const AvatarUpload = ({ avatar, setAvatar }) => {
-  const fileInputRef = useRef(null);
-  const [dragActive, setDragActive] = useState(false);
-
-  const handleFile = (file) => {
-    if (file && file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = (e) => setAvatar(e.target.result);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    setDragActive(false);
-    handleFile(e.dataTransfer.files[0]);
-  };
-
-  return (
-    <div
-      className={`avatar-area ${dragActive ? "drag-active" : ""}`}
-      onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
-      onDragLeave={() => setDragActive(false)}
-      onDrop={handleDrop}
-      onClick={() => fileInputRef.current.click()}
-    >
-      {avatar ? (
-        <img src={avatar} alt="avatar" className="avatar-preview" />
-      ) : (
-        <div className="avatar-placeholder">
-          <span className="material-symbol">📸</span>
-          <p>Click or drag image</p>
-        </div>
-      )}
-      <input type="file" ref={fileInputRef} hidden accept="image/*" onChange={(e) => handleFile(e.target.files[0])} />
-      {avatar && <div className="avatar-overlay">Change</div>}
-    </div>
-  );
-};
-
-// ========== TOOLTIP ==========
-const Tooltip = ({ text, children }) => {
-  const [show, setShow] = useState(false);
-  return (
-    <div className="tooltip-wrapper" onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
-      {children}
-      {show && <div className="tooltip">{text}</div>}
-    </div>
-  );
-};
-
-// ========== MAIN COMPONENT ==========
-export default function Settings() {
-  // ---------- STATE ----------
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem("settings_darkMode") === "true");
-  const [emailNotif, setEmailNotif] = useState(() => localStorage.getItem("settings_emailNotif") !== "false");
-  const [pushNotif, setPushNotif] = useState(() => localStorage.getItem("settings_pushNotif") === "true");
-  const [soundNotif, setSoundNotif] = useState(() => localStorage.getItem("settings_soundNotif") === "true");
-  const [accent, setAccent] = useState(() => localStorage.getItem("settings_accent") || "#6366f1");
-  const [name, setName] = useState(() => localStorage.getItem("settings_name") || "");
-  const [email, setEmail] = useState(() => localStorage.getItem("settings_email") || "");
-  const [bio, setBio] = useState(() => localStorage.getItem("settings_bio") || "");
-  const [avatar, setAvatar] = useState(() => localStorage.getItem("settings_avatar") || "");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordStrength, setPasswordStrength] = useState(0);
-  const [saved, setSaved] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+const Settings = () => {
+  const { userSkills, updateSkill, selectedRole, setSelectedRole } = useSkillContext();
   const [activeTab, setActiveTab] = useState("profile");
 
-  // Password strength
-  useEffect(() => {
-    let strength = 0;
-    if (password.length >= 8) strength++;
-    if (/[A-Z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
-    if (/[^A-Za-z0-9]/.test(password)) strength++;
-    setPasswordStrength(strength);
-  }, [password]);
+  // Profile settings
+  const [displayName, setDisplayName] = useState("Alex Johnson");
+  const [email, setEmail] = useState("alex@skillradar.com");
+  const [avatar, setAvatar] = useState(null);
+  const [resumeName, setResumeName] = useState(null);
+  const [resumeData, setResumeData] = useState(null); // base64 string
 
-  // Persist non‑sensitive settings instantly (except password)
-  useEffect(() => {
-    localStorage.setItem("settings_darkMode", darkMode);
-    localStorage.setItem("settings_emailNotif", emailNotif);
-    localStorage.setItem("settings_pushNotif", pushNotif);
-    localStorage.setItem("settings_soundNotif", soundNotif);
-    localStorage.setItem("settings_accent", accent);
-    localStorage.setItem("settings_name", name);
-    localStorage.setItem("settings_email", email);
-    localStorage.setItem("settings_bio", bio);
-    localStorage.setItem("settings_avatar", avatar);
-    document.documentElement.setAttribute("data-theme", darkMode ? "dark" : "light");
-    document.documentElement.style.setProperty("--accent", accent);
-  }, [darkMode, emailNotif, pushNotif, soundNotif, accent, name, email, bio, avatar]);
+  // Preferences
+  const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "dark");
+  const [animations, setAnimations] = useState(true);
+  const [compactView, setCompactView] = useState(false);
+  const [defaultRole, setDefaultRole] = useState(selectedRole);
 
-  const handleSave = async () => {
-    if (password && password !== confirmPassword) {
-      alert("Passwords do not match!");
-      return;
+  // Notifications
+  const [emailNotifications, setEmailNotifications] = useState(true);
+  const [pushNotifications, setPushNotifications] = useState(false);
+  const [weeklyReport, setWeeklyReport] = useState(true);
+  const [skillReminders, setSkillReminders] = useState(false);
+
+  // Security
+  const [twoFactor, setTwoFactor] = useState(false);
+  const [sessionTimeout, setSessionTimeout] = useState(30);
+
+  const allRoles = Object.keys(rolesDataRaw);
+
+  // Apply theme to body
+  useEffect(() => {
+    document.body.className = theme;
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  // Load saved settings from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem("settings");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setDisplayName(parsed.displayName || "Alex Johnson");
+        setEmail(parsed.email || "alex@skillradar.com");
+        setAnimations(parsed.animations ?? true);
+        setCompactView(parsed.compactView ?? false);
+        setDefaultRole(parsed.defaultRole || selectedRole);
+        setEmailNotifications(parsed.emailNotifications ?? true);
+        setPushNotifications(parsed.pushNotifications ?? false);
+        setWeeklyReport(parsed.weeklyReport ?? true);
+        setSkillReminders(parsed.skillReminders ?? false);
+        setTwoFactor(parsed.twoFactor ?? false);
+        setSessionTimeout(parsed.sessionTimeout ?? 30);
+      } catch(e) { console.warn(e); }
     }
-    setIsSaving(true);
-    await new Promise(r => setTimeout(r, 600)); // simulate network
-    if (password) {
-      localStorage.setItem("settings_password", btoa(password)); // dummy encryption
-      setPassword("");
-      setConfirmPassword("");
+    const savedAvatar = localStorage.getItem("avatar");
+    if (savedAvatar) setAvatar(savedAvatar);
+    const savedResume = localStorage.getItem("resume");
+    if (savedResume) {
+      const { name, data } = JSON.parse(savedResume);
+      setResumeName(name);
+      setResumeData(data);
     }
-    setIsSaving(false);
-    setSaved(true);
-    setTimeout(() => {
-      setSaved(false);
-    }, 2500);
+  }, [selectedRole]);
+
+  const handleAvatarChange = (e) => {
+    if (e.target.files[0]) {
+      const url = URL.createObjectURL(e.target.files[0]);
+      setAvatar(url);
+      localStorage.setItem("avatar", url);
+    }
   };
 
-  const exportSettings = () => {
-    const settings = {
-      darkMode, emailNotif, pushNotif, soundNotif, accent, name, email, bio, avatar
-    };
-    const dataStr = JSON.stringify(settings, null, 2);
-    const blob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "settings_backup.json";
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const importSettings = (e) => {
+  const handleResumeUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    // Validate file type
+    const allowedTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+    if (!allowedTypes.includes(file.type)) {
+      alert("Please upload a PDF or Word document (.pdf, .doc, .docx).");
+      return;
+    }
+    // Validate size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File size must be less than 5MB.");
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (ev) => {
-      try {
-        const data = JSON.parse(ev.target.result);
-        setDarkMode(data.darkMode ?? darkMode);
-        setEmailNotif(data.emailNotif ?? emailNotif);
-        setPushNotif(data.pushNotif ?? pushNotif);
-        setSoundNotif(data.soundNotif ?? soundNotif);
-        setAccent(data.accent ?? accent);
-        setName(data.name ?? name);
-        setEmail(data.email ?? email);
-        setBio(data.bio ?? bio);
-        setAvatar(data.avatar ?? avatar);
-      } catch (err) { alert("Invalid file"); }
+      const base64 = ev.target.result;
+      setResumeData(base64);
+      setResumeName(file.name);
+      localStorage.setItem("resume", JSON.stringify({ name: file.name, data: base64 }));
+      alert("Resume uploaded successfully!");
     };
-    reader.readAsText(file);
+    reader.readAsDataURL(file);
   };
 
-  const strengthLabel = ["Weak", "Fair", "Good", "Strong"][passwordStrength] || "Very Weak";
-  const strengthColor = ["#ef4444", "#f59e0b", "#eab308", "#10b981"][passwordStrength] || "#ef4444";
+  const handleRemoveResume = () => {
+    if (window.confirm("Remove your uploaded resume?")) {
+      setResumeData(null);
+      setResumeName(null);
+      localStorage.removeItem("resume");
+      alert("Resume removed.");
+    }
+  };
+
+  const handleSave = () => {
+    if (defaultRole !== selectedRole) {
+      setSelectedRole(defaultRole);
+    }
+    const settings = {
+      displayName, email, theme, animations, compactView, defaultRole,
+      emailNotifications, pushNotifications, weeklyReport, skillReminders,
+      twoFactor, sessionTimeout
+    };
+    localStorage.setItem("settings", JSON.stringify(settings));
+    if (avatar) localStorage.setItem("avatar", avatar);
+    // resume already saved on upload
+    alert("Settings saved successfully!");
+  };
+
+  const handleReset = () => {
+    if (window.confirm("Reset all settings to default?")) {
+      setDisplayName("Alex Johnson");
+      setEmail("alex@skillradar.com");
+      setAvatar(null);
+      setResumeName(null);
+      setResumeData(null);
+      setTheme("dark");
+      setAnimations(true);
+      setCompactView(false);
+      setDefaultRole(selectedRole);
+      setEmailNotifications(true);
+      setPushNotifications(false);
+      setWeeklyReport(true);
+      setSkillReminders(false);
+      setTwoFactor(false);
+      setSessionTimeout(30);
+      localStorage.removeItem("avatar");
+      localStorage.removeItem("resume");
+      alert("Settings reset to default.");
+    }
+  };
+
+  // Other handlers (password, clear skills, delete account, notifications, 2FA) remain the same
+  const handleChangePassword = () => {
+    const newPassword = prompt("Enter new password:");
+    if (newPassword && newPassword.length >= 6) {
+      alert("Password changed successfully (demo).");
+    } else if (newPassword) {
+      alert("Password must be at least 6 characters.");
+    }
+  };
+
+  const handleClearSkillData = () => {
+    if (window.confirm("WARNING: This will reset all your skill ratings to 0. Are you sure?")) {
+      ALL_SKILLS.forEach(skill => updateSkill(skill, 0));
+      alert("All skill data has been cleared.");
+    }
+  };
+
+  const handleDeleteAccount = () => {
+    if (window.confirm("⚠️ DANGER: This will permanently delete your account. This action cannot be undone. Are you sure?")) {
+      localStorage.clear();
+      alert("Account deleted. You will be redirected to the homepage.");
+      window.location.href = "/";
+    }
+  };
+
+  const requestNotificationPermission = async () => {
+    if (!("Notification" in window)) {
+      alert("This browser does not support desktop notifications.");
+      return false;
+    }
+    if (Notification.permission === "granted") return true;
+    if (Notification.permission !== "denied") {
+      const permission = await Notification.requestPermission();
+      return permission === "granted";
+    }
+    return false;
+  };
+
+  const handlePushNotificationsToggle = async (checked) => {
+    if (checked) {
+      const granted = await requestNotificationPermission();
+      if (granted) {
+        setPushNotifications(true);
+        alert("Notifications enabled!");
+      } else {
+        alert("Permission denied. Enable notifications in your browser settings.");
+      }
+    } else {
+      setPushNotifications(false);
+    }
+  };
+
+  const handleTwoFactorToggle = async (checked) => {
+    if (checked) {
+      const confirm = window.confirm(
+        "Enable Two-Factor Authentication? This will send a verification code to your email (demo)."
+      );
+      if (confirm) {
+        setTwoFactor(true);
+        alert("2FA enabled. (Demo – no real changes made.)");
+      }
+    } else {
+      setTwoFactor(false);
+      alert("2FA disabled.");
+    }
+  };
 
   return (
-    <div className="settings-container">
-      {saved && <div className="save-popup">✨ Settings Saved Successfully</div>}
-
-      {/* Animated gradient orbs */}
-      <div className="orb orb1"></div>
-      <div className="orb orb2"></div>
-      <div className="orb orb3"></div>
-
+    <div className="settings-page">
       <div className="settings-header">
-        <h1 className="settings-title">
-          <span className="title-icon">⚙️</span> Dashboard Preferences
-        </h1>
-        <div className="header-actions">
-          <Tooltip text="Export settings as JSON">
-            <button className="icon-btn" onClick={exportSettings}>📤</button>
-          </Tooltip>
-        </div>
+        <h1>Settings</h1>
+        <p>Manage your account preferences and application settings</p>
       </div>
 
-      {/* Tabs */}
-      <div className="settings-tabs">
-        {["profile", "appearance", "notifications", "security"].map(tab => (
-          <button
-            key={tab}
-            className={`tab-btn ${activeTab === tab ? "active" : ""}`}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab === "profile" && "👤 Profile"}
-            {tab === "appearance" && "🎨 Appearance"}
-            {tab === "notifications" && "🔔 Notifications"}
-            {tab === "security" && "🔐 Security"}
+      <div className="settings-container">
+        <div className="settings-tabs">
+          <button className={`tab-btn ${activeTab === "profile" ? "active" : ""}`} onClick={() => setActiveTab("profile")}>
+            <span className="tab-icon">👤</span> Profile
           </button>
-        ))}
-      </div>
+          <button className={`tab-btn ${activeTab === "preferences" ? "active" : ""}`} onClick={() => setActiveTab("preferences")}>
+            <span className="tab-icon">⚙️</span> Preferences
+          </button>
+          <button className={`tab-btn ${activeTab === "notifications" ? "active" : ""}`} onClick={() => setActiveTab("notifications")}>
+            <span className="tab-icon">🔔</span> Notifications
+          </button>
+          <button className={`tab-btn ${activeTab === "security" ? "active" : ""}`} onClick={() => setActiveTab("security")}>
+            <span className="tab-icon">🔒</span> Security
+          </button>
+          <button className={`tab-btn ${activeTab === "danger" ? "active" : ""}`} onClick={() => setActiveTab("danger")}>
+            <span className="tab-icon">⚠️</span> Danger Zone
+          </button>
+        </div>
 
-      <div className="settings-content">
-        {/* PROFILE TAB */}
-        {activeTab === "profile" && (
-          <div className="settings-card glass-card animate-in">
-            <div className="profile-layout">
-              <AvatarUpload avatar={avatar} setAvatar={setAvatar} />
-              <div className="profile-fields">
-                <div className="input-group floating">
-                  <input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder=" " />
-                  <label htmlFor="name">Full Name</label>
+        <div className="settings-content">
+          {/* Profile Tab – with Resume Upload */}
+          {activeTab === "profile" && (
+            <div className="settings-section fade-in">
+              <h2>Profile Information</h2>
+              <div className="avatar-section">
+                <div className="avatar-preview">
+                  {avatar ? (
+                    <img src={avatar} alt="Avatar" />
+                  ) : (
+                    <div className="avatar-placeholder">{displayName.charAt(0).toUpperCase()}</div>
+                  )}
                 </div>
-                <div className="input-group floating">
-                  <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder=" " />
-                  <label htmlFor="email">Email Address</label>
+                <label className="avatar-upload">
+                  <input type="file" accept="image/*" onChange={handleAvatarChange} />
+                  Change Avatar
+                </label>
+              </div>
+              <div className="form-group">
+                <label>Display Name</label>
+                <input type="text" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Your name" />
+              </div>
+              <div className="form-group">
+                <label>Email Address</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@example.com" />
+              </div>
+              <div className="form-group">
+                <label>Default Role</label>
+                <select value={defaultRole} onChange={(e) => setDefaultRole(e.target.value)}>
+                  {allRoles.map(role => (
+                    <option key={role} value={role}>{role}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Resume Upload Section */}
+              <div className="resume-section">
+                <label className="resume-label">Resume / CV</label>
+                <div className="resume-controls">
+                  <label className="resume-upload-btn">
+                    <input type="file" accept=".pdf,.doc,.docx" onChange={handleResumeUpload} />
+                    Upload Resume
+                  </label>
+                  {resumeName && (
+                    <div className="resume-info">
+                      <span className="resume-name">📄 {resumeName}</span>
+                      <button className="resume-remove" onClick={handleRemoveResume}>Remove</button>
+                    </div>
+                  )}
                 </div>
-                <div className="input-group floating">
-                  <textarea id="bio" value={bio} onChange={(e) => setBio(e.target.value)} placeholder=" " rows="2" />
-                  <label htmlFor="bio">Short Bio</label>
-                </div>
+                <p className="resume-hint">Accepted formats: PDF, DOC, DOCX (max 5MB)</p>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* APPEARANCE TAB */}
-        {activeTab === "appearance" && (
-          <div className="settings-card glass-card animate-in">
-            <div className="toggle-row">
-              <span>🌙 Dark Mode</span>
-              <label className="switch">
-                <input type="checkbox" checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
-                <span className="slider round"></span>
-              </label>
-            </div>
-            <div className="accent-picker">
-              <span>🎨 Primary Color</span>
-              <div className="colors">
-                {["#6366f1", "#ec4899", "#10b981", "#f59e0b", "#8b5cf6", "#06b6d4"].map(c => (
-                  <div key={c} className={`color-chip ${accent === c ? "selected" : ""}`} style={{ background: c }} onClick={() => setAccent(c)}>
-                    {accent === c && <span className="check-mark">✓</span>}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="preview-card">
-              <p>Live preview</p>
-              <div className="preview-elements">
-                <button className="preview-btn" style={{ background: accent }}>Accent Button</button>
-                <div className="preview-switch">
-                  <label className="switch"><input type="checkbox" checked /><span className="slider round"></span></label>
+          {/* Preferences Tab – unchanged */}
+          {activeTab === "preferences" && (
+            <div className="settings-section fade-in">
+              <h2>Appearance & Behavior</h2>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <span className="setting-label">Theme</span>
+                  <span className="setting-desc">Choose between light and dark mode</span>
+                </div>
+                <div className="theme-switch">
+                  <button className={`theme-option ${theme === "light" ? "active" : ""}`} onClick={() => setTheme("light")}>☀️ Light</button>
+                  <button className={`theme-option ${theme === "dark" ? "active" : ""}`} onClick={() => setTheme("dark")}>🌙 Dark</button>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* NOTIFICATIONS TAB */}
-        {activeTab === "notifications" && (
-          <div className="settings-card glass-card animate-in">
-            <div className="toggle-row">
-              <span>📧 Email Notifications</span>
-              <label className="switch"><input type="checkbox" checked={emailNotif} onChange={() => setEmailNotif(!emailNotif)} /><span className="slider round"></span></label>
-            </div>
-            <div className="toggle-row">
-              <span>📱 Push Notifications</span>
-              <label className="switch"><input type="checkbox" checked={pushNotif} onChange={() => setPushNotif(!pushNotif)} /><span className="slider round"></span></label>
-            </div>
-            <div className="toggle-row">
-              <span>🔊 Sound Effects</span>
-              <label className="switch"><input type="checkbox" checked={soundNotif} onChange={() => setSoundNotif(!soundNotif)} /><span className="slider round"></span></label>
-            </div>
-            <div className="notification-demo">
-              <p>🔔 Test notification</p>
-              <button className="test-notif" onClick={() => alert("🔔 Notification demo!")}>Send Test</button>
-            </div>
-          </div>
-        )}
-
-        {/* SECURITY TAB */}
-        {activeTab === "security" && (
-          <div className="settings-card glass-card animate-in">
-            <div className="input-group floating">
-              <input id="newPass" type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder=" " />
-              <label htmlFor="newPass">New Password</label>
-            </div>
-            {password && (
-              <div className="strength-meter">
-                <div className="strength-fill" style={{ width: `${(passwordStrength / 4) * 100}%`, background: strengthColor }} />
-                <span className="strength-text" style={{ color: strengthColor }}>{strengthLabel}</span>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <span className="setting-label">Animations</span>
+                  <span className="setting-desc">Enable smooth transitions and effects</span>
+                </div>
+                <label className="toggle-switch">
+                  <input type="checkbox" checked={animations} onChange={(e) => setAnimations(e.target.checked)} />
+                  <span className="toggle-slider"></span>
+                </label>
               </div>
-            )}
-            <div className="input-group floating">
-              <input id="confirmPass" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder=" " />
-              <label htmlFor="confirmPass">Confirm Password</label>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <span className="setting-label">Compact View</span>
+                  <span className="setting-desc">Show more items per page</span>
+                </div>
+                <label className="toggle-switch">
+                  <input type="checkbox" checked={compactView} onChange={(e) => setCompactView(e.target.checked)} />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
             </div>
-            {confirmPassword && password !== confirmPassword && <div className="error-msg">❌ Passwords do not match</div>}
-            <div className="security-note">
-              🔒 Your password is hashed and never stored in plain text.
+          )}
+
+          {/* Notifications Tab – unchanged */}
+          {activeTab === "notifications" && (
+            <div className="settings-section fade-in">
+              <h2>Notification Preferences</h2>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <span className="setting-label">Email Notifications</span>
+                  <span className="setting-desc">Receive updates via email</span>
+                </div>
+                <label className="toggle-switch">
+                  <input type="checkbox" checked={emailNotifications} onChange={(e) => setEmailNotifications(e.target.checked)} />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <span className="setting-label">Push Notifications</span>
+                  <span className="setting-desc">Browser notifications for activity</span>
+                </div>
+                <label className="toggle-switch">
+                  <input type="checkbox" checked={pushNotifications} onChange={(e) => handlePushNotificationsToggle(e.target.checked)} />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <span className="setting-label">Weekly Progress Report</span>
+                  <span className="setting-desc">Get a summary of your skill growth</span>
+                </div>
+                <label className="toggle-switch">
+                  <input type="checkbox" checked={weeklyReport} onChange={(e) => setWeeklyReport(e.target.checked)} />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <span className="setting-label">Skill Reminders</span>
+                  <span className="setting-desc">Remind me to practice weak skills</span>
+                </div>
+                <label className="toggle-switch">
+                  <input type="checkbox" checked={skillReminders} onChange={(e) => setSkillReminders(e.target.checked)} />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
             </div>
+          )}
+
+          {/* Security Tab – unchanged */}
+          {activeTab === "security" && (
+            <div className="settings-section fade-in">
+              <h2>Security Settings</h2>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <span className="setting-label">Two-Factor Authentication</span>
+                  <span className="setting-desc">Add an extra layer of security</span>
+                </div>
+                <label className="toggle-switch">
+                  <input type="checkbox" checked={twoFactor} onChange={(e) => handleTwoFactorToggle(e.target.checked)} />
+                  <span className="toggle-slider"></span>
+                </label>
+              </div>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <span className="setting-label">Session Timeout</span>
+                  <span className="setting-desc">Automatically log out after inactivity</span>
+                </div>
+                <div className="slider-container">
+                  <input type="range" min="5" max="120" step="5" value={sessionTimeout} onChange={(e) => setSessionTimeout(parseInt(e.target.value))} />
+                  <span className="slider-value">{sessionTimeout} minutes</span>
+                </div>
+              </div>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <span className="setting-label">Change Password</span>
+                  <span className="setting-desc">Update your password regularly</span>
+                </div>
+                <button className="btn-secondary" onClick={handleChangePassword}>Change Password</button>
+              </div>
+            </div>
+          )}
+
+          {/* Danger Zone Tab – unchanged */}
+          {activeTab === "danger" && (
+            <div className="settings-section fade-in danger-zone">
+              <h2>⚠️ Danger Zone</h2>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <span className="setting-label">Clear All Skill Data</span>
+                  <span className="setting-desc">Remove all your skill ratings and progress</span>
+                </div>
+                <button className="btn-danger" onClick={handleClearSkillData}>Clear Data</button>
+              </div>
+              <div className="setting-item">
+                <div className="setting-info">
+                  <span className="setting-label">Delete Account</span>
+                  <span className="setting-desc">Permanently delete your account and all data</span>
+                </div>
+                <button className="btn-danger" onClick={handleDeleteAccount}>Delete Account</button>
+              </div>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div className="settings-actions">
+            <button className="btn-primary" onClick={handleSave}>Save Changes</button>
+            <button className="btn-secondary" onClick={handleReset}>Reset to Default</button>
           </div>
-        )}
-      </div>
-
-      {/* SAVE BUTTON with loading state */}
-      <button className="save-btn" onClick={handleSave} disabled={isSaving}>
-        {isSaving ? (
-          <span className="loader"></span>
-        ) : (
-          <>💾 Save All Changes</>
-        )}
-      </button>
-
-      {/* Floating keyboard hint */}
-      <div className="keyboard-hint">
-        <kbd>Ctrl</kbd> + <kbd>S</kbd> to save
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default Settings;

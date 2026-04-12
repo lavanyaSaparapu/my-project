@@ -7,8 +7,6 @@ export const useSkillContext = () => {
   const context = useContext(SkillContext);
   if (!context) throw new Error('useSkillContext must be used within SkillProvider');
   return context;
-  
-
 };
 
 export const SkillProvider = ({ children }) => {
@@ -19,9 +17,10 @@ export const SkillProvider = ({ children }) => {
         return JSON.parse(saved);
       } catch(e) { console.error(e); }
     }
+    // ✅ CHANGE: all skills start at 0 instead of random values
     const defaults = {};
     ALL_SKILLS.forEach(skill => {
-      defaults[skill] = Math.floor(Math.random() * 40) + 30;
+      defaults[skill] = 0;
     });
     return defaults;
   };
@@ -79,6 +78,11 @@ export const SkillProvider = ({ children }) => {
 
   const getRoleData = (roleName) => rolesWithMetrics.find(r => r.name === roleName);
 
+  // Derived values for the currently selected role
+  const currentRoleData = getRoleData(selectedRole);
+  const matchScore = currentRoleData?.matchScore ?? 0;
+  const prioritySkills = currentRoleData?.prioritySkills ?? [];
+
   return (
     <SkillContext.Provider value={{
       userSkills,
@@ -89,6 +93,8 @@ export const SkillProvider = ({ children }) => {
       bestMatchRole,
       getRoleData,
       skillHistory,
+      matchScore,
+      prioritySkills,
     }}>
       {children}
     </SkillContext.Provider>

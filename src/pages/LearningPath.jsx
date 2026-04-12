@@ -146,12 +146,7 @@ export default function LearningPage() {
       <div className="blob blob-2"></div>
       <div className="blob blob-3"></div>
 
-      <div className="learning-tabs">
-        <span className="tab">Dashboard</span>
-        <span className="tab active">Learning Path</span>
-        <span className="tab">Progress</span>
-      </div>
-
+      
       <div className="learning-header">
         <div className="title-section">
           <span className="header-icon">🧠</span>

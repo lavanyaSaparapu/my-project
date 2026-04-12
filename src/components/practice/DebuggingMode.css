@@ -1,0 +1,314 @@
+/* DebuggingMode.css – VS Code style with test result styling */
+
+:root {
+  --bg-dark: #0f0f1a;
+  --bg-panel: #1a1a2e;
+  --bg-editor: #0a0c15;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --border: #2d3a5e;
+  --success: #10b981;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  --purple: #8b5cf6;
+}
+
+.debugging-mode {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: 'Inter', system-ui, -apple-system, monospace;
+  background: var(--bg-dark);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+.debug-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.back-button {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.back-button:hover {
+  background: rgba(255,255,255,0.15);
+  transform: translateX(-4px);
+}
+
+.progress-badge {
+  background: var(--bg-panel);
+  padding: 0.4rem 1rem;
+  border-radius: 40px;
+  font-size: 0.85rem;
+  border: 1px solid var(--border);
+}
+
+.debug-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 1.5rem;
+}
+@media (max-width: 900px) {
+  .debug-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.debug-left {
+  background: var(--bg-panel);
+  border-radius: 24px;
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+}
+
+.bug-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.bug-title h2 {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.difficulty {
+  padding: 0.25rem 0.75rem;
+  border-radius: 40px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.difficulty.easy { background: var(--success); color: #000; }
+.difficulty.medium { background: var(--warning); color: #000; }
+.difficulty.hard { background: var(--error); color: #fff; }
+
+.bug-description {
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.buggy-code-block {
+  background: var(--bg-editor);
+  border-radius: 16px;
+  overflow: auto;
+  margin-bottom: 1.5rem;
+}
+.code-header {
+  padding: 0.5rem 1rem;
+  background: rgba(255,255,255,0.05);
+  font-size: 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+.code-pre {
+  margin: 0;
+  padding: 0.75rem;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.code-line {
+  display: flex;
+  gap: 1rem;
+}
+.line-number {
+  color: var(--text-secondary);
+  text-align: right;
+  width: 2rem;
+  user-select: none;
+}
+.line-code {
+  color: #f8f9fa;
+  white-space: pre-wrap;
+}
+
+.hint-section {
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 16px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+.hint-section h4 {
+  margin: 0 0 0.5rem 0;
+}
+.hint-placeholder {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+.hint-list {
+  margin: 0 0 1rem 0;
+  padding-left: 1.2rem;
+}
+.hint-item {
+  margin: 0.5rem 0;
+  animation: fadeIn 0.3s ease;
+}
+.hint-btn {
+  background: var(--warning);
+  color: #000;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 40px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: transform 0.2s;
+}
+.hint-btn:hover {
+  transform: scale(1.02);
+  filter: brightness(1.05);
+}
+.job-role {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.debug-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.editor-section {
+  background: var(--bg-panel);
+  border-radius: 24px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: var(--bg-editor);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+.run-btn, .solution-btn {
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 40px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: transform 0.2s, filter 0.2s;
+}
+.run-btn {
+  background: linear-gradient(135deg, var(--info), var(--purple));
+  color: white;
+}
+.solution-btn {
+  background: #4b5563;
+  color: white;
+}
+.run-btn:hover, .solution-btn:hover {
+  transform: scale(1.02);
+  filter: brightness(1.05);
+}
+.code-editor {
+  width: 100%;
+  background: var(--bg-editor);
+  color: #f8f9fa;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 13px;
+  padding: 1rem;
+  border: none;
+  resize: vertical;
+  outline: none;
+}
+.code-editor:focus {
+  background: #0e121f;
+}
+
+.output-section {
+  background: var(--bg-panel);
+  border-radius: 24px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.output-header {
+  padding: 0.5rem 1rem;
+  background: var(--bg-editor);
+  font-size: 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+.test-results {
+  padding: 0.75rem;
+  font-family: monospace;
+  font-size: 13px;
+  background: #0a0c15;
+  min-height: 120px;
+}
+.test-placeholder {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+.test-item {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+.test-item.passed {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--success);
+}
+.test-item.failed {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--error);
+}
+.test-icon {
+  font-weight: bold;
+}
+.test-desc {
+  font-weight: 500;
+}
+.test-error, .test-detail {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  width: 100%;
+  margin-left: 1.5rem;
+}
+.next-section {
+  text-align: center;
+  margin-top: 0.5rem;
+}
+.next-btn {
+  background: linear-gradient(135deg, var(--success), #059669);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 40px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+  width: 100%;
+}
+.next-btn:hover {
+  transform: scale(1.02);
+  filter: brightness(1.05);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
